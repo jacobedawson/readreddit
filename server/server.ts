@@ -112,12 +112,23 @@ function appendToFile(post) {
         fs.mkdirSync(path);
     }
     const file = './server/processing/test.json';
-    const x = [];
+    fs.stat(file, (err, stat) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log(stat.size);
+        if (stat.size === 0) {
+            const x = [];
+            jsonfile.writeFile(file, JSON.stringify(x), err => {
+                console.log(err);
+            });
+        }
+    });
     jsonfile.readFile(file, (err, data) => {
-        console.log(typeof data);
+        const x = JSON.parse(data);
         x.push(post);
-        console.log(x);
-        jsonfile.writeFile(file, x, {flag: 'a'}, e => {
+        const y = JSON.stringify(x);
+        jsonfile.writeFile(file, y, e => {
             console.log('Error? ' + e);
         });
     });

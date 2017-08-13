@@ -1,14 +1,14 @@
 const express = require('express');
 const app = express();
 const snow = require('snoowrap'); // Reddit API wrapper
-const fs = require('fs');
+const fs = require('fs'); 
 const getURLs = require('get-urls');
 
 app.get('/', (req, res) => {
   res.send('Hello world');
 });
 
-// TODO remove hardcoded credentials
+// TODO remove hardcoded credentials, use ENV VARs
 const r = new snow({
   userAgent: 'Get book lists',
   clientId: 'FyApUjvFK5lH3Q',
@@ -41,6 +41,12 @@ const r = new snow({
 //     writeFile(JSON.stringify(post), 'top-posts','json');
 //   });
 
+// TASKS
+
+// 2.) Get all threads & comments? for the past 7 days / 168 hours
+// 3.) Process all the links in the text, extract any that point to Amazon, Safari or O'Reilly
+// 4.) Verify that the link is to a book page (via Amazon Product API / metadata)
+
 // This function will retrieve a reddit post by id
 // then save it to a file for search processing
 r.getSubmission('6s6r4a')
@@ -48,27 +54,16 @@ r.getSubmission('6s6r4a')
     .then(post => checkPostForBookLinks(post));
 
 function checkPostForBookLinks(post) {
-    const text = JSON.stringify(post).replace('\\"','');
-    const x = getURLs(text);
-    for (let link of x) {
-        if (!link.includes('amazon')) {
-            x.delete(link);
-        }
-        if (link.includes('a%3') || link.includes('n-')) {
-            x.delete(link);
+    const setOfLinks = getURLs(JSON.stringify(post));
+    for (let link of setOfLinks) {
+        if (!link.includes('amazon') || link.includes('a%3') || link.includes('n-')) {
+            setOfLinks.delete(link);
         }
     }
-    console.log(x);
+    console.log(setOfLinks);
 }
 
-
-// TASKS
-
-// 2.) Get all threads & comments? for the past 7 days / 168 hours
-// 3.) Process all the links in the text, extract any that point to Amazon, Safari or O'Reilly
-// 4.) Verify that the link is to a book page (via Amazon Product API / metadata)
-
-function writeFile(data, filename = 'temp', extension) {
+function writeFile(data, filename = 'temp', extension = 'txt') {
   const path = `./server/processing/${filename}.${extension}`;
   fs.writeFile(path, data, (err) => {
     if (err) console.log(err);
@@ -77,5 +72,5 @@ function writeFile(data, filename = 'temp', extension) {
 }
 
 app.listen(3000, () => {
-  console.log('App listening on 3000');
+  console.log('ReddReader server is listening on 3000');
 });

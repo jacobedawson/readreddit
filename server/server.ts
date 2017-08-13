@@ -65,21 +65,44 @@ function fetchSingleRedditPost(post) {
 function checkPostForBookLinks(postData, post) {
     const setOfLinks = getURLs(JSON.stringify(postData));
     const amazonLinks = filterLinks(Array.from(setOfLinks));
-    if (amazonLinks.length > 0) {
-        post.links = amazonLinks;
+    const dedupedLinks = Array.from(new Set([...amazonLinks]));
+    if (dedupedLinks.length > 0) {
+        post.links = dedupedLinks;
         appendToFile(post);
     }
 }
 
 const isAmazon = /^https?:\/\/(smile\.am|amazon|amzn)/;
 function filterLinks(arr) {
-    return arr.filter(link => link.match(isAmazon));
+    return arr
+        .filter(link => link.match(isAmazon))
+        .map(link => linkCleaner(link));
+}
+
+function linkCleaner(link) {
+    if (link.indexOf('%') > -1) {
+        const idx = link.indexOf('%');
+        link = link.slice(0, idx);
+    }
+    if (link.indexOf('/n-') > -1) {
+        const idx = link.indexOf('/n-');
+        link = link.slice(0, idx);
+    }
+    if (link.indexOf(')') > -1) {
+        const idx = link.indexOf(')');
+        link = link.slice(0, idx);
+    }
+    return link;
 }
 
 function appendToFile(post) {
-    const file  = './server/processing/test.json';
-    jsonfile.writeFile(file, post, {flag: 'a'}, (err) => {
-            console.log(err);
+    const path = './server/processing';
+    if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
+    }
+    const file = './server/processing/test.json';
+    jsonfile.writeFile(file, post, { flag: 'a' }, (err) => {
+        console.log(err);
     });
 }
 

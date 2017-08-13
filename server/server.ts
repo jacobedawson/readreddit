@@ -26,7 +26,7 @@ fetchSubreddit('startups');
 function fetchSubreddit(name) {
     r.getSubreddit(name = 'startups')
         .getTop({
-            limit: 10,
+            limit: 100,
             time: 'week'
         })
         .then()
@@ -79,6 +79,7 @@ function filterLinks(arr) {
         .map(link => linkCleaner(link));
 }
 
+// TODO - use compose or something here, too repetitive
 function linkCleaner(link) {
     if (link.indexOf('%') > -1) {
         const idx = link.indexOf('%');
@@ -92,6 +93,16 @@ function linkCleaner(link) {
         const idx = link.indexOf(')');
         link = link.slice(0, idx);
     }
+    if (link.indexOf('?') > -1) {
+        const idx = link.indexOf('?');
+        link = link.slice(0, idx);
+    }
+    if (link.indexOf('smile.') > -1) {
+        link = link.replace('smile.', '');
+    }
+    if (link.endsWith('/')) {
+        link = link.slice(0, -1);
+    }
     return link;
 }
 
@@ -101,19 +112,14 @@ function appendToFile(post) {
         fs.mkdirSync(path);
     }
     const file = './server/processing/test.json';
-    jsonfile.writeFile(file, post, { flag: 'a' }, (err) => {
-        console.log(err);
-    });
-}
-
-function writeFile(data, filename = 'temp', extension = 'txt') {
-    const path = `./server/processing/${filename}.${extension}`;
-    fs.writeFile(path, data, (err) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log('Successfully wrote file');
-        }
+    const x = [];
+    jsonfile.readFile(file, (err, data) => {
+        console.log(typeof data);
+        x.push(post);
+        console.log(x);
+        jsonfile.writeFile(file, x, {flag: 'a'}, e => {
+            console.log('Error? ' + e);
+        });
     });
 }
 

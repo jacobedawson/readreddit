@@ -29,6 +29,7 @@
     "@angular/platform-browser-dynamic": "^4.3.4",
     "@angular/platform-server": "^4.3.4",
     "@angular/router": "^4.3.4",
+    "amazon-product-api": "^0.4.4",
     "core-js": "^2.4.1",
     "express": "^4.15.4",
     "get-urls": "^7.0.0",

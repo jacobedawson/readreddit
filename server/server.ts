@@ -4,6 +4,7 @@ import * as snow from 'snoowrap';
 import * as fs from 'fs';
 import * as getURLs from 'get-urls';
 import * as jsonfile from 'jsonfile';
+import * as amazon from 'amazon-product-api';
 
 const app = express();
 app.get('/', (req, res) => {
@@ -11,6 +12,29 @@ app.get('/', (req, res) => {
 });
 
 // TODO remove hardcoded credentials, use ENV VARs
+const z = amazon.createClient({
+    awsId: 'AKIAIYCQD7MAVTQB3TZQ',
+    awsSecret: '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',
+    awsTag: 'readreddit-20'
+});
+
+z.itemLookup({
+    idType: 'ASIN',
+    itemId: '0984999302',
+    responseGroup: 'ItemAttributes,Medium,Images'
+}).then((results) => {
+    // console.log(JSON.stringify(results));
+    console.log(results[0].DetailPageURL[0]);
+    console.log(results[0].ImageSets[0]);
+    console.log(results[0].ItemAttributes[0].Author);
+    console.log(results[0].ItemAttributes[0].ISBN);
+    console.log(results[0].ItemAttributes[0].Title);
+    console.log(results[0].EditorialReviews[0].EditorialReview[0].Content);
+    fs.writeFile('./server/processing/amzn.txt', JSON.stringify(results), (error) => console.log(error));
+}).catch((err) => {
+    console.log(err);
+});
+
 const r = new snow({
     userAgent: 'Get book lists',
     clientId: 'FyApUjvFK5lH3Q',
@@ -19,7 +43,7 @@ const r = new snow({
     password: 'DYb&H^Hd3#7b'
 });
 
-fetchSubreddit('startups');
+// fetchSubreddit('startups');
 
 // The following function retrieves the top 100 posts in a subreddit
 // for the past week

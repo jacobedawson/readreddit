@@ -23,14 +23,19 @@ z.itemLookup({
     itemId: '0984999302',
     responseGroup: 'ItemAttributes,Medium,Images'
 }).then((results) => {
-    // console.log(JSON.stringify(results));
-    console.log(results[0].DetailPageURL[0]);
-    console.log(results[0].ImageSets[0]);
-    console.log(results[0].ItemAttributes[0].Author);
-    console.log(results[0].ItemAttributes[0].ISBN);
-    console.log(results[0].ItemAttributes[0].Title);
-    console.log(results[0].EditorialReviews[0].EditorialReview[0].Content);
-    fs.writeFile('./server/processing/amzn.txt', JSON.stringify(results), (error) => console.log(error));
+    if (results && results[0]) {
+        const resultsObject = results[0];
+        const x = {
+            url: resultsObject.DetailPageURL[0],
+            image: resultsObject.LargeImage[0].URL,
+            author: resultsObject.ItemAttributes[0].Author,
+            ISBN: resultsObject.ItemAttributes[0].ISBN,
+            title: resultsObject.ItemAttributes[0].Title,
+            description: resultsObject.EditorialReviews[0].EditorialReview[0].Content
+        }
+        console.log(JSON.stringify(x));
+        fs.writeFile('./server/processing/amzn.txt', JSON.stringify(x), (error) => console.log(error));
+    }
 }).catch((err) => {
     console.log(err);
 });

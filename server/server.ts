@@ -18,28 +18,6 @@ const z = amazon.createClient({
     awsTag: 'readreddit-20'
 });
 
-z.itemLookup({
-    idType: 'ASIN',
-    itemId: '0984999302',
-    responseGroup: 'ItemAttributes,Medium,Images'
-}).then((results) => {
-    if (results && results[0]) {
-        const resultsObject = results[0];
-        const x = {
-            url: resultsObject.DetailPageURL[0],
-            image: resultsObject.LargeImage[0].URL,
-            author: resultsObject.ItemAttributes[0].Author,
-            ISBN: resultsObject.ItemAttributes[0].ISBN,
-            title: resultsObject.ItemAttributes[0].Title,
-            description: resultsObject.EditorialReviews[0].EditorialReview[0].Content
-        }
-        console.log(JSON.stringify(x));
-        fs.writeFile('./server/processing/amzn.txt', JSON.stringify(x), (error) => console.log(error));
-    }
-}).catch((err) => {
-    console.log(err);
-});
-
 const r = new snow({
     userAgent: 'Get book lists',
     clientId: 'FyApUjvFK5lH3Q',
@@ -48,15 +26,17 @@ const r = new snow({
     password: 'DYb&H^Hd3#7b'
 });
 
-// fetchSubreddit('startups');
+fetchSubreddit('startups');
+
+
 
 // The following function retrieves the top 100 posts in a subreddit
 // for the past week
 function fetchSubreddit(name) {
     r.getSubreddit(name = 'startups')
         .getTop({
-            limit: 100,
-            time: 'week'
+            limit: 10,
+            time: 'month'
         })
         .then()
         .map((post, index) => {
@@ -67,7 +47,8 @@ function fetchSubreddit(name) {
                 score: post.score,
                 url: post.url,
                 author: post.author,
-                comments: post.num_comments
+                comments: post.num_comments,
+                links: []
             };
         })
         .then(allTopPosts => {
@@ -90,14 +71,21 @@ function fetchSingleRedditPost(post) {
         .then(postData => checkPostForBookLinks(postData, post));
 }
 
-// This function will grab all amazon links if found in a post
+//  This function will grab all amazon links if found in a post
 function checkPostForBookLinks(postData, post) {
     const setOfLinks = getURLs(JSON.stringify(postData));
     const amazonLinks = filterLinks(Array.from(setOfLinks));
     const dedupedLinks = Array.from(new Set([...amazonLinks]));
     if (dedupedLinks.length > 0) {
-        post.links = dedupedLinks;
-        appendToFile(post);
+        // TODO - obviously this is appending the post 4 times...WRONG!
+        dedupedLinks.map(link => {
+            const productID = link.substr(link.length - 10);
+            amazonItemLookup(productID).then((el) => {
+                post.links.push(el);
+            }).then(() => {
+                appendToFile(post);
+            });
+        });
     }
 }
 
@@ -135,31 +123,56 @@ function linkCleaner(link) {
     return link;
 }
 
+function amazonItemLookup(itemID: string) {
+    return z.itemLookup({
+        idType: 'ASIN',
+        itemId: `${itemID}`,
+        responseGroup: 'ItemAttributes,Medium,Images'
+    }).then(results => {
+        if (results && results[0]) {
+            const resultsObject = results[0];
+            const itemResults = {
+                url: resultsObject.DetailPageURL[0],
+                image: resultsObject.LargeImage[0].URL,
+                author: resultsObject.ItemAttributes[0].Author,
+                ISBN: resultsObject.ItemAttributes[0].ISBN,
+                title: resultsObject.ItemAttributes[0].Title,
+                description: resultsObject.EditorialReviews[0].EditorialReview[0].Content
+            }
+            console.log('ITEM RESULTS: ' + JSON.stringify(itemResults));
+            return JSON.stringify(itemResults);
+        }
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
 function appendToFile(post) {
     const path = './server/processing';
-    if (!fs.existsSync(path)) {
+    try {
+        fs.accessSync(path);
+    } catch (e) {
         fs.mkdirSync(path);
     }
     const file = './server/processing/test.json';
-    fs.stat(file, (err, stat) => {
+    jsonfile.readFile(file, (err, data) => {
         if (err) {
-            console.log(err);
-        }
-        console.log(stat.size);
-        if (stat.size === 0) {
-            const x = [];
-            jsonfile.writeFile(file, JSON.stringify(x), err => {
-                console.log(err);
+            const x = {
+                "data": [
+                    post
+                ]
+            };
+            jsonfile.writeFile(file, JSON.stringify(x), error => {
+                console.log(error);
+            });
+        } else {
+            const x = JSON.parse(data);
+            x.data.push(post);
+            const y = JSON.stringify(x);
+            jsonfile.writeFile(file, y, e => {
+                console.log('Error? ' + e);
             });
         }
-    });
-    jsonfile.readFile(file, (err, data) => {
-        const x = JSON.parse(data);
-        x.push(post);
-        const y = JSON.stringify(x);
-        jsonfile.writeFile(file, y, e => {
-            console.log('Error? ' + e);
-        });
     });
 }
 

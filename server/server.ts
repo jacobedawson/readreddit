@@ -11,6 +11,8 @@ app.get('/', (req, res) => {
     res.send('Hello world');
 });
 
+const globalArray = [];
+
 // TODO remove hardcoded credentials, use ENV VARs
 const z = amazon.createClient({
     awsId: 'AKIAIYCQD7MAVTQB3TZQ',
@@ -34,7 +36,7 @@ const fetchSingleRedditPost = function(post) {
     r.getSubmission(post.id.toString())
         .fetch()
         .then(postData => checkPostForBookLinks(postData, post));
-}
+};
 
 /*
     This function retrieves the top N posts in a subreddit
@@ -43,8 +45,8 @@ const fetchSingleRedditPost = function(post) {
 const fetchSubreddit = function(name = 'startups', limit = 10, time = 'month') {
     r.getSubreddit(name)
         .getTop({
-            limit: 10,
-            time: 'month'
+            limit,
+            time
         })
         .then()
         .map((post, index) => {
@@ -66,7 +68,7 @@ const fetchSubreddit = function(name = 'startups', limit = 10, time = 'month') {
         });
 };
 
-fetchSubreddit('startups');
+fetchSubreddit('entrepreneur', 100);
 
 
 
@@ -81,7 +83,12 @@ function checkPostForBookLinks(postData, post) {
             return amazonItemLookup(productID, post);
         });
         Promise.all(arrayOfPromises).then((results) => {
-            appendToFile(post); // This will probably a db call
+            if (post.links.length > 0) {
+                // appendToFile(post); // This will probably a db call
+                globalArray.push(post);
+            }
+        }).then(() => {
+            console.log(globalArray);
         });
     }
 }
@@ -120,6 +127,10 @@ function linkCleaner(link) {
     if (link.indexOf('smile.') > -1) {
         link = link.replace('smile.', '');
     }
+    if (link.indexOf('/ref=') > -1) {
+        const idx = link.indexOf('/ref=');
+        link = link.slice(0, idx);
+    }
     if (link.endsWith('/')) {
         link = link.slice(0, -1);
     }
@@ -137,7 +148,7 @@ function amazonItemLookup(itemID: string, post): Promise<any> {
         itemId: `${itemID}`,
         responseGroup: 'ItemAttributes,Medium,Images'
     }).then(results => {
-        if (results && results[0]) {
+        if (results && results[0] && results[0].ItemAttributes[0].ISBN) {
             const resultsObject = results[0];
             post.links.push({
                 url: resultsObject.DetailPageURL[0],
@@ -149,7 +160,7 @@ function amazonItemLookup(itemID: string, post): Promise<any> {
             });
         }
     }).catch((err) => {
-        console.log(err);
+        console.dir(err);
     });
 }
 
@@ -170,8 +181,9 @@ function appendToFile(post) {
     const file = './server/processing/test.json';
     jsonfile.readFile(file, (err, data) => {
         if (err) {
+            console.log('Error in readFile ' + err);
             const x = {
-                'data': [
+                "data" : [
                     post
                 ]
             };

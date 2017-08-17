@@ -26,14 +26,22 @@ const r = new snow({
     password: 'DYb&H^Hd3#7b'
 });
 
-fetchSubreddit('startups');
+/*
+    This function will retrieve a reddit post by id
+    then return it to be searched for book links
+*/
+const fetchSingleRedditPost = function(post) {
+    r.getSubmission(post.id.toString())
+        .fetch()
+        .then(postData => checkPostForBookLinks(postData, post));
+}
 
-
-
-// The following function retrieves the top 100 posts in a subreddit
-// for the past week
-function fetchSubreddit(name) {
-    r.getSubreddit(name = 'startups')
+/*
+    This function retrieves the top N posts in a subreddit
+    for the past X amount of time
+*/
+const fetchSubreddit = function(name = 'startups', limit = 10, time = 'month') {
+    r.getSubreddit(name)
         .getTop({
             limit: 10,
             time: 'month'
@@ -56,20 +64,11 @@ function fetchSubreddit(name) {
                 fetchSingleRedditPost(post);
             });
         });
-}
+};
 
-// TODO Get all threads & comments? for the past 7 days / 168 hours
-// TODO Process all the links in the text, extract any that point to Amazon, Safari or O'Reilly
-// TODO Verify that the link is to a book page (via Amazon Product API / metadata)
+fetchSubreddit('startups');
 
-// This function will retrieve a reddit post by id
-// then save it to a file for search processing
-function fetchSingleRedditPost(post) {
-    // console.log(`Id is ${post.id}`);
-    r.getSubmission(post.id.toString())
-        .fetch()
-        .then(postData => checkPostForBookLinks(postData, post));
-}
+
 
 //  This function will grab all amazon links if found in a post
 function checkPostForBookLinks(postData, post) {
@@ -77,18 +76,19 @@ function checkPostForBookLinks(postData, post) {
     const amazonLinks = filterLinks(Array.from(setOfLinks));
     const dedupedLinks = Array.from(new Set([...amazonLinks]));
     if (dedupedLinks.length > 0) {
-        // TODO - obviously this is appending the post 4 times...WRONG!
-        dedupedLinks.map(link => {
+        const arrayOfPromises = dedupedLinks.map(link => {
             const productID = link.substr(link.length - 10);
-            amazonItemLookup(productID).then((el) => {
-                post.links.push(el);
-            }).then(() => {
-                appendToFile(post);
-            });
+            return amazonItemLookup(productID, post);
+        });
+        Promise.all(arrayOfPromises).then((results) => {
+            appendToFile(post); // This will probably a db call
         });
     }
 }
 
+/*
+    Check if the link contains any amazon related url components
+*/
 const isAmazon = /^https?:\/\/(smile\.am|amazon|amzn)/;
 function filterLinks(arr) {
     return arr
@@ -96,7 +96,10 @@ function filterLinks(arr) {
         .map(link => linkCleaner(link));
 }
 
-// TODO - use compose or something here, too repetitive
+/*
+    TODO - use compose or something here, too repetitive
+    Strip special characters and the smile subdomain
+*/
 function linkCleaner(link) {
     if (link.indexOf('%') > -1) {
         const idx = link.indexOf('%');
@@ -123,7 +126,12 @@ function linkCleaner(link) {
     return link;
 }
 
-function amazonItemLookup(itemID: string) {
+/*
+    this function takes an itemID and searches the Amazon product database.
+    If the item is found, we create an object with the item attributes and then
+    return it, to be pushed into the post object's item array.
+*/
+function amazonItemLookup(itemID: string, post): Promise<any> {
     return z.itemLookup({
         idType: 'ASIN',
         itemId: `${itemID}`,
@@ -131,22 +139,27 @@ function amazonItemLookup(itemID: string) {
     }).then(results => {
         if (results && results[0]) {
             const resultsObject = results[0];
-            const itemResults = {
+            post.links.push({
                 url: resultsObject.DetailPageURL[0],
                 image: resultsObject.LargeImage[0].URL,
                 author: resultsObject.ItemAttributes[0].Author,
                 ISBN: resultsObject.ItemAttributes[0].ISBN,
                 title: resultsObject.ItemAttributes[0].Title,
                 description: resultsObject.EditorialReviews[0].EditorialReview[0].Content
-            }
-            console.log('ITEM RESULTS: ' + JSON.stringify(itemResults));
-            return JSON.stringify(itemResults);
+            });
         }
     }).catch((err) => {
         console.log(err);
     });
 }
 
+/*
+    This function takes in a post, creates a directory if it doesn't already exist
+    and also creates a file if it doesn't exist. jsonfile.readFile will attempt to
+    open a file if it exists, and create one if it doesn't.
+    If the file doesn't exist that means we need to create a json object, with
+    a data array. If the file exists, we pull out the json file and push to the data array.
+*/
 function appendToFile(post) {
     const path = './server/processing';
     try {
@@ -158,7 +171,7 @@ function appendToFile(post) {
     jsonfile.readFile(file, (err, data) => {
         if (err) {
             const x = {
-                "data": [
+                'data': [
                     post
                 ]
             };

@@ -7,11 +7,7 @@ import * as jsonfile from 'jsonfile';
 import * as amazon from 'amazon-product-api';
 
 const app = express();
-app.get('/', (req, res) => {
-    res.send('Hello world');
-});
-
-const globalArray = [];
+app.get('/', (req, res) => res.send('Hello world'));
 
 // TODO remove hardcoded credentials, use ENV VARs
 const z = amazon.createClient({
@@ -28,28 +24,23 @@ const r = new snow({
     password: 'DYb&H^Hd3#7b'
 });
 
-/*
-    This function will retrieve a reddit post by id
-    then return it to be searched for book links
-*/
-const fetchSingleRedditPost = function(post) {
-    r.getSubmission(post.id.toString())
-        .fetch()
-        .then(postData => checkPostForBookLinks(postData, post));
-};
+//  This function will grab all amazon links if found in a post
+function checkPostForBookLinks(postData) {
+    const setOfLinks = getURLs(JSON.stringify(postData)); // extract all links
+    const amazonLinks = filterLinks(Array.from(setOfLinks)); // filter non amazon links
+    const dedupedLinks = Array.from(new Set([...amazonLinks])); // dedupe using set and return an array
+    return dedupedLinks.length > 0 ? dedupedLinks : [];
+}
 
 /*
     This function retrieves the top N posts in a subreddit
     for the past X amount of time
 */
-const fetchSubreddit = function(name = 'startups', limit = 10, time = 'month') {
-    r.getSubreddit(name)
-        .getTop({
-            limit,
-            time
-        })
+const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'month') {
+    return r.getSubreddit(name)
+        .getTop({ limit, time })
         .then()
-        .map((post, index) => {
+        .map((post, index) => { // map over each post, return an array of processed posts
             return {
                 index,
                 title: post.title,
@@ -61,44 +52,51 @@ const fetchSubreddit = function(name = 'startups', limit = 10, time = 'month') {
                 links: []
             };
         })
-        .then(allTopPosts => {
-            allTopPosts.map(post => {
-                fetchSingleRedditPost(post);
-            });
+        .then()
+        .map(post => { // map over each processed post, return a processed array
+            return fetchSingleRedditPost(post);
         });
 };
 
-fetchSubreddit('entrepreneur', 100);
-
-
-
-//  This function will grab all amazon links if found in a post
-function checkPostForBookLinks(postData, post) {
-    const setOfLinks = getURLs(JSON.stringify(postData));
-    const amazonLinks = filterLinks(Array.from(setOfLinks));
-    const dedupedLinks = Array.from(new Set([...amazonLinks]));
-    if (dedupedLinks.length > 0) {
-        const arrayOfPromises = dedupedLinks.map(link => {
-            const productID = link.substr(link.length - 10);
-            return amazonItemLookup(productID, post);
-        });
-        Promise.all(arrayOfPromises).then((results) => {
-            if (post.links.length > 0) {
-                // appendToFile(post); // This will probably a db call
-                globalArray.push(post);
-            }
-        }).then(() => {
-            console.log(globalArray);
-        });
-    }
-}
+fetchSubreddit('entrepreneur', 10).then(complete => {
+    console.log('COMPLETE: 🔥');
+    console.log(complete);
+    /* 
+        TODO:
+        We now have an array of processed reddit posts. 
+        There are still some post objects with link arrays that only 
+        contain undefined, or a mix of real results and undefined. 
+        The next steps are:
+            1.) Clean up the post.link arrays, remove empty posts
+            2.) Send the results to a DB, ordered with a subreddit name
+                and a date e.g. Reddit - Startups 01/01 - 01/02
+    */
+});
 
 /*
-    Check if the link contains any amazon related url components
+    This function will retrieve a reddit post by id
+    then return it to be searched for book links
 */
+function fetchSingleRedditPost(post) {
+    const postID = post.id.toString();
+    return r.getSubmission(postID)
+        .fetch()
+        .then(postData => {
+            post.links = checkPostForBookLinks(postData);
+            return Promise.all(post.links.map(link => {
+                const productID = link.substr(link.length - 10);
+                return amazonItemLookup(productID);
+            }));
+        }).then(amazonData => {
+            post.links = amazonData;
+            return post;
+        });
+};
+
+// Check if the link contains any amazon related url components
 const isAmazon = /^https?:\/\/(smile\.am|amazon|amzn)/;
-function filterLinks(arr) {
-    return arr
+function filterLinks(rawLinks) {
+    return rawLinks
         .filter(link => link.match(isAmazon))
         .map(link => linkCleaner(link));
 }
@@ -142,65 +140,26 @@ function linkCleaner(link) {
     If the item is found, we create an object with the item attributes and then
     return it, to be pushed into the post object's item array.
 */
-function amazonItemLookup(itemID: string, post): Promise<any> {
+function amazonItemLookup(itemID: string): Promise<any> {
     return z.itemLookup({
         idType: 'ASIN',
         itemId: `${itemID}`,
         responseGroup: 'ItemAttributes,Medium,Images'
     }).then(results => {
-        if (results && results[0] && results[0].ItemAttributes[0].ISBN) {
+        if (results && results[0] && results[0].ItemAttributes[0].Author) {
             const resultsObject = results[0];
-            post.links.push({
+            return {
                 url: resultsObject.DetailPageURL[0],
                 image: resultsObject.LargeImage[0].URL,
                 author: resultsObject.ItemAttributes[0].Author,
                 ISBN: resultsObject.ItemAttributes[0].ISBN,
                 title: resultsObject.ItemAttributes[0].Title,
                 description: resultsObject.EditorialReviews[0].EditorialReview[0].Content
-            });
+            };
         }
     }).catch((err) => {
         console.dir(err);
     });
 }
 
-/*
-    This function takes in a post, creates a directory if it doesn't already exist
-    and also creates a file if it doesn't exist. jsonfile.readFile will attempt to
-    open a file if it exists, and create one if it doesn't.
-    If the file doesn't exist that means we need to create a json object, with
-    a data array. If the file exists, we pull out the json file and push to the data array.
-*/
-function appendToFile(post) {
-    const path = './server/processing';
-    try {
-        fs.accessSync(path);
-    } catch (e) {
-        fs.mkdirSync(path);
-    }
-    const file = './server/processing/test.json';
-    jsonfile.readFile(file, (err, data) => {
-        if (err) {
-            console.log('Error in readFile ' + err);
-            const x = {
-                "data" : [
-                    post
-                ]
-            };
-            jsonfile.writeFile(file, JSON.stringify(x), error => {
-                console.log(error);
-            });
-        } else {
-            const x = JSON.parse(data);
-            x.data.push(post);
-            const y = JSON.stringify(x);
-            jsonfile.writeFile(file, y, e => {
-                console.log('Error? ' + e);
-            });
-        }
-    });
-}
-
-app.listen(3000, () => {
-    console.log('ReddReader server is listening on 3000');
-});
+app.listen(3000, () => console.log('Listening on 3000'));

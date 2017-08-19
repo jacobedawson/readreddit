@@ -58,20 +58,31 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
         });
 };
 
-fetchSubreddit('entrepreneur', 10).then(complete => {
+fetchSubreddit('entrepreneur', 10).then(posts => {
+    const processedPosts = removeEmptyLinks(posts);
     console.log('COMPLETE: 🔥');
-    console.log(complete);
-    /* 
+    console.log(processedPosts);
+    /*
         TODO:
-        We now have an array of processed reddit posts. 
-        There are still some post objects with link arrays that only 
-        contain undefined, or a mix of real results and undefined. 
+        We now have an array of processed reddit posts.
+        There are still some post objects with link arrays that only
+        contain undefined, or a mix of real results and undefined.
         The next steps are:
-            1.) Clean up the post.link arrays, remove empty posts
-            2.) Send the results to a DB, ordered with a subreddit name
-                and a date e.g. Reddit - Startups 01/01 - 01/02
+            # Add the results to a DB, ordered with a subreddit name
+            and a date e.g. Reddit - Startups 01/01 - 01/02
+            # Work out the best way to order the DB for API access
+
     */
 });
+
+function removeEmptyLinks(posts) {
+    return posts.filter(post => {
+        const filteredArray = post.links.filter((link) => {
+            return link !== undefined;
+        });
+        return filteredArray.length > 0;
+    });
+}
 
 /*
     This function will retrieve a reddit post by id
@@ -156,6 +167,8 @@ function amazonItemLookup(itemID: string): Promise<any> {
                 title: resultsObject.ItemAttributes[0].Title,
                 description: resultsObject.EditorialReviews[0].EditorialReview[0].Content
             };
+        } else {
+            return undefined;
         }
     }).catch((err) => {
         console.dir(err);

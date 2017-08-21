@@ -5,9 +5,15 @@ import * as fs from 'fs';
 import * as getURLs from 'get-urls';
 import * as jsonfile from 'jsonfile';
 import * as amazon from 'amazon-product-api';
+import * as mongoose from 'mongoose';
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/reddreader');
+
+import { List } from './models/list';
 
 const app = express();
 app.get('/', (req, res) => res.send('Hello world'));
+
 
 // TODO remove hardcoded credentials, use ENV VARs
 const z = amazon.createClient({
@@ -47,7 +53,7 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
                 id: post.id,
                 score: post.score,
                 url: post.url,
-                author: post.author,
+                author: post.author.name,
                 comments: post.num_comments,
                 links: []
             };
@@ -58,22 +64,24 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
         });
 };
 
-fetchSubreddit('entrepreneur', 10).then(posts => {
-    const processedPosts = removeEmptyLinks(posts);
-    console.log('COMPLETE: 🔥');
-    console.log(processedPosts);
-    /*
-        TODO:
-        We now have an array of processed reddit posts.
-        There are still some post objects with link arrays that only
-        contain undefined, or a mix of real results and undefined.
-        The next steps are:
-            # Add the results to a DB, ordered with a subreddit name
-            and a date e.g. Reddit - Startups 01/01 - 01/02
-            # Work out the best way to order the DB for API access
-
-    */
-});
+// fetchSubreddit('entrepreneur', 10).then(posts => {
+//     const processedPosts = removeEmptyLinks(posts);
+//     console.log('COMPLETE: 🔥');
+//     console.log(processedPosts);
+//     const x = new List({
+//         name: 342017,
+//         subreddit: 'entrepreneur',
+//         created: Date.now(),
+//         postCount: 10,
+//         posts: processedPosts
+//     });
+//     x.save((err) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//         console.log('Saved list');
+//     });
+// });
 
 function removeEmptyLinks(posts) {
     return posts.filter(post => {

@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
-import * as LinkSchema from './link';
+import { LinkSchema } from './link';
+
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
@@ -13,4 +14,4 @@ const PostSchema = new Schema({
     links: [LinkSchema]
 });
 
-module.exports = PostSchema;
+export { PostSchema };

@@ -1,18 +1,27 @@
 // const _ = require('ramda');
 import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
 import * as snow from 'snoowrap';
 import * as fs from 'fs';
 import * as getURLs from 'get-urls';
 import * as jsonfile from 'jsonfile';
 import * as amazon from 'amazon-product-api';
+import router from './api';
 import * as mongoose from 'mongoose';
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/reddreader');
 
-import { List } from './models/list';
+import List from './models/list';
 
 const app = express();
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+app.use(cors());
 app.get('/', (req, res) => res.send('Hello world'));
+app.use('/api', router);
 
 
 // TODO remove hardcoded credentials, use ENV VARs
@@ -69,10 +78,10 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
 //     console.log('COMPLETE: 🔥');
 //     console.log(processedPosts);
 //     const x = new List({
-//         name: 342017,
+//         week: 32,
+//         year: 2017,
 //         subreddit: 'entrepreneur',
 //         created: Date.now(),
-//         postCount: 10,
 //         posts: processedPosts
 //     });
 //     x.save((err) => {

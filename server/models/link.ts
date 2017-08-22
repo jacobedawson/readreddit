@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 const LinkSchema = new Schema({
@@ -10,4 +11,4 @@ const LinkSchema = new Schema({
     descript: String
 });
 
-module.exports = LinkSchema;
+export { LinkSchema };

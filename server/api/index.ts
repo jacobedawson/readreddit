@@ -11,10 +11,15 @@ router.get('/', (req, res) => {
 });
 
 router.get('/list', (req, res) => {
+    // TODO - use req / params for query
+    // e.g. http://localhost:3000/api/list?week=32&year=2017&subreddit=entrepreneur
+    const week = req.query.week ? req.query.week : 0;
+    const year = req.query.year ? req.query.year : 0;
+    const subreddit = req.query.subreddit ? req.query.subreddit : '';
     List.find({
-        week: 32,
-        year: 2017,
-        subreddit: 'entrepreneur'
+        week: week,
+        year: year,
+        subreddit: subreddit
     }, (err, list) => {
         if (err) {
             res.json({
@@ -22,10 +27,14 @@ router.get('/list', (req, res) => {
                 error: err
             });
         }
-        if (list) {
+        if (list.length > 0) {
             res.json({
                 info: 'Found ReddReader List',
                 data: list
+            });
+        } else {
+            res.json({
+                info: 'No list matching that search found'
             });
         }
     });

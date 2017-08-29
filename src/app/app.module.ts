@@ -11,6 +11,9 @@ import { PostComponent } from './post/post.component';
 import { FooterComponent } from './footer/footer.component';
 import { FilteredResultsComponent } from './filtered-results/filtered-results.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { IntrotextComponent } from './introtext/introtext.component';
+import { FilterBarComponent } from './filter-bar/filter-bar.component';
+import { BookcardComponent } from './bookcard/bookcard.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import { NotFoundComponent } from './not-found/not-found.component';
     PostComponent,
     FooterComponent,
     FilteredResultsComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    IntrotextComponent,
+    FilterBarComponent,
+    BookcardComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,11 @@
+@import '../sass/colors';
+
+
+.navbar {
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 1px 5px 0px #d8d8d8;
+}
+
+.navbar-brand {
+    color: $rr-red;
+}

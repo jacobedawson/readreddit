@@ -1,0 +1,19 @@
+a.rr-button {
+    border: 2px solid #ccc;
+    padding: 10px 16px;
+    color: #ccc;
+    text-decoration: none;
+    transition: 0.3s all ease-in-out;
+    display: block;
+    text-align: center;
+    max-width: 200px;
+}
+
+.rr-button.primary {
+    border: 2px solid $rr-red;
+    color: $rr-red;
+    &:hover {
+        background: $rr-red;
+        color: #fff;
+    }
+}   

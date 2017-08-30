@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+@import './app/sass/_colors.scss';
+@import './app/sass/_buttons.scss';
+
+
+body {
+    font-family: 'Roboto', sans-serif;
+}

@@ -1,0 +1,15 @@
+.post-thumbnail {
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    @media (max-width: 1200px) {
+        margin: 10px auto;
+        width: 100%;
+    }
+}
+
+.book-information {
+    flex: 1 1 auto;
+}

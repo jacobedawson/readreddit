@@ -1,10 +1,9 @@
 @import '../sass/colors';
 
 
-// .navbar {
-//     border-bottom: 1px solid #ccc;
-//     box-shadow: 0 1px 5px 0px #d8d8d8;
-// }
+.navbar {
+    border-bottom: 1px solid $rr-red;
+}
 
 .navbar-brand {
     color: $rr-red;
@@ -13,9 +12,13 @@
     height: 40px;
     text-align: center;
     border-radius: 4px;
-    transition: 0.3s color ease-in-out;
+    transition: 0.3s all ease-in-out;
     &:hover {
-        color: #000;
-        border: 1px solid #000;
+        color: $rr-pink;
+        border: 3px solid $rr-pink;
     }
+}
+
+.menu-toggle {
+    color: $rr-red;
 }

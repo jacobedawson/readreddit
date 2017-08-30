@@ -1,3 +1,13 @@
+@import '../sass/_colors.scss';
+
 .row {
     flex-direction: column;
+}
+
+h1 {
+    color: $rr-red;
+}
+
+a {
+    color: $rr-red;
 }

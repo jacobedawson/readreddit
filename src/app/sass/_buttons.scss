@@ -1,4 +1,7 @@
 a.rr-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 2px solid #ccc;
     padding: 10px 16px;
     color: #ccc;
@@ -15,5 +18,16 @@ a.rr-button {
     &:hover {
         background: $rr-red;
         color: #fff;
+        .arrow {
+            transition: 0.3s all ease-in-out;
+            fill: #fff;
+        }
     }
 }   
+
+.arrow {
+    fill: $rr-red;
+    height: .7em;
+    margin-left: .4em;
+    transition: 0.3s all ease-in-out;
+}

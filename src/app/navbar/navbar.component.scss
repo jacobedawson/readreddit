@@ -1,11 +1,21 @@
 @import '../sass/colors';
 
 
-.navbar {
-    border-bottom: 1px solid #ccc;
-    box-shadow: 0 1px 5px 0px #d8d8d8;
-}
+// .navbar {
+//     border-bottom: 1px solid #ccc;
+//     box-shadow: 0 1px 5px 0px #d8d8d8;
+// }
 
 .navbar-brand {
     color: $rr-red;
+    border: 3px solid $rr-red;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border-radius: 4px;
+    transition: 0.3s color ease-in-out;
+    &:hover {
+        color: #000;
+        border: 1px solid #000;
+    }
 }

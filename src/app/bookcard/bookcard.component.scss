@@ -1,0 +1,21 @@
+@import '../sass/_colors.scss';
+
+.book-card {
+    margin-bottom: 10px;
+    background: $rr-blue;
+    border-left: 3px solid transparent;
+    border-top: 1px solid rgb(14, 36, 57);
+    transition: 0.3s all ease-in-out;
+    &:hover {
+        border-left: 3px solid $rr-red;
+        transform: translateX(10px);
+        .card-title {
+            transition: 0.3s all ease-in-out;
+            color: $rr-red;
+        }
+    }
+}
+
+.book-information {
+    flex: 1 1 auto;
+}

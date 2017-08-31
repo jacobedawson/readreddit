@@ -1,18 +1,6 @@
 @import '../sass/_variables';
 @import '../sass/_colors';
 
-.post-thumbnail {
-    width: 100px;
-    height: 100px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 50% 50%;
-    @media (max-width: 1200px) {
-        margin: 10px auto;
-        width: 100%;
-    }
-}
-
 .post-card {
     margin-bottom: 10px;
     background: $rr-blue;
@@ -23,22 +11,6 @@
         h4 {
             transition: 0.3s all ease-in-out;
             color: $rr-pink;
-        }
-    }
-}
-
-.book-card {
-    margin-bottom: 10px;
-    background: $rr-blue;
-    border-left: 3px solid transparent;
-    border-top: 1px solid rgb(14, 36, 57);
-    transition: 0.3s all ease-in-out;
-    &:hover {
-        border-left: 3px solid $rr-red;
-        transform: translateX(10px);
-        .card-title {
-            transition: 0.3s all ease-in-out;
-            color: $rr-red;
         }
     }
 }
@@ -58,6 +30,3 @@
     }
 }
 
-.book-information {
-    flex: 1 1 auto;
-}

@@ -8,3 +8,16 @@ body {
     color: $rr-grey-mid;
     background: $rr-blue;
 }
+
+// TODO move to card styles
+.post-thumbnail {
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    @media (max-width: 1200px) {
+        margin: 10px auto;
+        width: 100%;
+    }
+}

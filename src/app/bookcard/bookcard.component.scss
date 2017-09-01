@@ -6,6 +6,7 @@
     border-left: 3px solid transparent;
     border-top: 1px solid rgb(14, 36, 57);
     transition: 0.3s all ease-in-out;
+    padding: 24px;
     &:hover {
         border-left: 3px solid $rr-red;
         transform: translateX(10px);
@@ -14,8 +15,18 @@
             color: $rr-red;
         }
     }
+    @media (max-width: 768px) {
+        padding: 0;
+    }
 }
 
 .book-information {
-    flex: 1 1 auto;
+    flex: 1 1 70%;
+    margin-left: 24px;
+    .card-title {
+        font-weight: 300;
+    }
+    @media (max-width: 768px) {
+        margin-left: 0;
+    }
 }

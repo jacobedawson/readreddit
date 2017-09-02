@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { PostService } from './../post.service';
 
 @Component({
@@ -7,8 +8,13 @@ import { PostService } from './../post.service';
   styleUrls: ['./filtered-results.component.scss']
 })
 export class FilteredResultsComponent implements OnInit {
-  posts;
-  constructor(private postService: PostService) { }
+  posts: any;
+  subscription: Subscription;
+  constructor(private postService: PostService) {
+    this.subscription = this.postService.updatePosts().subscribe(res => {
+      this.posts = res['data'][0].posts;
+    });
+  }
 
   ngOnInit() {
     this.postService.getPosts().subscribe((res) => {

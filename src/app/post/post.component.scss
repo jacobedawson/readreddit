@@ -3,7 +3,7 @@
 .post-card {
     margin-bottom: 10px;
     background: $rr-blue;
-    border-left: 3px solid transparent;
+    border-left: 3px solid $rr-grey-dark;
     transition: 0.3s all ease-in-out;
     padding: 24px;
     h4.card-title {

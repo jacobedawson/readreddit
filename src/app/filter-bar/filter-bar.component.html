@@ -1,6 +1,6 @@
 <div class="row p-2 justify-content-center">
   <form class="form-inline justify-content-between p-4">
-    <select class="custom-select mr-2" id="inlineFormCustomSelect">
+    <select (change)="onSubredditSelection($event)" class="custom-select mr-2" id="inlineFormCustomSelect">
       <option value="1">r/startups</option>
       <option value="2">r/entrepreneurs</option>
       <option value="3">r/webdev</option>

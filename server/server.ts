@@ -73,22 +73,25 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
         });
 };
 
-// fetchSubreddit('entrepreneur', 10).then(posts => {
-//     const processedPosts = removeEmptyLinks(posts);
-//     console.log('COMPLETE: 🔥');
-//     console.log(processedPosts);
-//     const x = new List({
-//         week: 32,
-//         year: 2017,
-//         subreddit: 'entrepreneur',
-//         created: Date.now(),
-//         posts: processedPosts
-//     });
-//     x.save((err) => {
-//         if (err) {
-//             console.log(err);
-//         }
-//         console.log('Saved list');
+const subredditList = ['webdev'];
+// subredditList.map(sub => {
+//     fetchSubreddit(sub, 100, 'week').then(posts => {
+//         const processedPosts = removeEmptyLinks(posts);
+//         console.log('COMPLETE: 🔥');
+//         console.log(processedPosts);
+//         const compiledList = new List({
+//             week: 35,
+//             year: 2017,
+//             subreddit: sub,
+//             created: Date.now(),
+//             posts: processedPosts
+//         });
+//         compiledList.save((err) => {
+//             if (err) {
+//                 console.log(err);
+//             }
+//             console.log('Saved list');
+//         });
 //     });
 // });
 

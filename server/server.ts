@@ -9,6 +9,7 @@ import * as jsonfile from 'jsonfile';
 import * as amazon from 'amazon-product-api';
 import router from './api';
 import * as mongoose from 'mongoose';
+import * as cron from 'node-cron'; // cron.schedule ...
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/reddreader');
 
@@ -73,7 +74,11 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
         });
 };
 
-const subredditList = ['webdev'];
+const subredditList = [
+    'webdev',
+    'entrepreneur',
+    'startups'
+];
 // subredditList.map(sub => {
 //     fetchSubreddit(sub, 100, 'week').then(posts => {
 //         const processedPosts = removeEmptyLinks(posts);

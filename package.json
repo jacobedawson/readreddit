@@ -39,6 +39,7 @@
     "jquery": "^3.2.1",
     "jsonfile": "^3.0.1",
     "mongoose": "^4.11.7",
+    "node-cron": "^1.2.1",
     "popper.js": "^1.12.5",
     "ramda": "^0.24.1",
     "roboto-fontface": "^0.8.0",

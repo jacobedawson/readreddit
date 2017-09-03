@@ -10,6 +10,7 @@ import * as amazon from 'amazon-product-api';
 import router from './api';
 import * as mongoose from 'mongoose';
 import * as cron from 'node-cron'; // cron.schedule ...
+import * as week from 'current-week-number';
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/reddreader');
 
@@ -85,8 +86,8 @@ const subredditList = [
 //         console.log('COMPLETE: 🔥');
 //         console.log(processedPosts);
 //         const compiledList = new List({
-//             week: 35,
-//             year: 2017,
+//             week: week(),
+//             year: (new Date()).getFullYear(),
 //             subreddit: sub,
 //             created: Date.now(),
 //             posts: processedPosts

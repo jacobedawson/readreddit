@@ -15,6 +15,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/reddreader');
 
 import List from './models/list';
+import Catalog from './models/catalog';
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -100,6 +101,64 @@ const subredditList = [
 //         });
 //     });
 // });
+
+function updateCatalog() {
+    // Does the category exist yet?
+    Catalog.findOne({
+        subreddit: 'startups'
+    }, (err, entry) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        if (entry) {
+            // If yes, does the specific date exist?
+            Catalog.findOne({
+                subreddit: 'startups',
+                'dates.year' : 2017,
+                'dates.week' : 36
+            }, (e, match) => {
+                if (e) {
+                    console.log(err);
+                }
+                if (match) {
+                    // if yes, exit
+                    console.log('existing doc found');
+                    return;
+                } else {
+                    // otherwise, update the entry
+                    entry.dates.push({
+                        year: 2017,
+                        week: 36
+                    });
+                    entry.save((error) => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log('updated new date');
+                        }
+                    });
+                }
+            });
+        } else {
+            // Create a new entry if none exists
+            const x = new Catalog({
+                subreddit: 'startups',
+                dates: {
+                    year: 2017,
+                    week: 37
+                }
+            });
+            x.save(e => {
+                console.log('writing new');
+                if (e) {
+                    console.log(e);
+                }
+            });
+        }
+    });
+}
+updateCatalog();
 
 function removeEmptyLinks(posts) {
     return posts.filter(post => {

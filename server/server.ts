@@ -84,11 +84,13 @@ const subredditList = [
 // subredditList.map(sub => {
 //     fetchSubreddit(sub, 100, 'week').then(posts => {
 //         const processedPosts = removeEmptyLinks(posts);
-//         console.log('COMPLETE: 🔥');
 //         console.log(processedPosts);
+//         const w = week();
+//         const y = (new Date()).getFullYear();
+//         updateCatalog(sub, y, w);
 //         const compiledList = new List({
-//             week: week(),
-//             year: (new Date()).getFullYear(),
+//             week: w,
+//             year: y,
 //             subreddit: sub,
 //             created: Date.now(),
 //             posts: processedPosts
@@ -97,15 +99,16 @@ const subredditList = [
 //             if (err) {
 //                 console.log(err);
 //             }
-//             console.log('Saved list');
+//             console.log('COMPLETE: 🔥');
 //         });
 //     });
 // });
 
-function updateCatalog() {
+function updateCatalog(sub, year, week) {
+    console.log('####>>>>>>>SUBBBBBBB: ' + sub);
     // Does the category exist yet?
     Catalog.findOne({
-        subreddit: 'startups'
+        subreddit: sub
     }, (err, entry) => {
         if (err) {
             console.log(err);
@@ -114,9 +117,9 @@ function updateCatalog() {
         if (entry) {
             // If yes, does the specific date exist?
             Catalog.findOne({
-                subreddit: 'startups',
-                'dates.year' : 2017,
-                'dates.week' : 36
+                subreddit: sub,
+                'dates.year': year,
+                'dates.week': week
             }, (e, match) => {
                 if (e) {
                     console.log(err);
@@ -128,8 +131,8 @@ function updateCatalog() {
                 } else {
                     // otherwise, update the entry
                     entry.dates.push({
-                        year: 2017,
-                        week: 36
+                        year,
+                        week
                     });
                     entry.save((error) => {
                         if (error) {
@@ -143,12 +146,13 @@ function updateCatalog() {
         } else {
             // Create a new entry if none exists
             const x = new Catalog({
-                subreddit: 'startups',
+                subreddit: sub,
                 dates: {
-                    year: 2017,
-                    week: 37
+                    year,
+                    week
                 }
             });
+            console.log('THIS IS X: ' + x);
             x.save(e => {
                 console.log('writing new');
                 if (e) {
@@ -158,7 +162,6 @@ function updateCatalog() {
         }
     });
 }
-updateCatalog();
 
 function removeEmptyLinks(posts) {
     return posts.filter(post => {

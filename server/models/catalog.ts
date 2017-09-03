@@ -5,8 +5,6 @@ const Schema = mongoose.Schema;
 const Dates = new Schema({
     year: Number,
     week: Number,
-}, {
-    _id: false
 });
 
 const CatalogSchema = new Schema({

@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const PostSchema = new Schema({
     index: Number,
     title: String,
+    published: Number,
     id: String,
     score: Number,
     url: String,

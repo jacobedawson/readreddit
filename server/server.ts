@@ -63,6 +63,7 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
                 index,
                 title: post.title,
                 id: post.id,
+                published: post.created_utc,
                 score: post.score,
                 url: post.url,
                 author: post.author.name,
@@ -81,28 +82,28 @@ const subredditList = [
     'entrepreneur',
     'startups'
 ];
-// subredditList.map(sub => {
-//     fetchSubreddit(sub, 100, 'week').then(posts => {
-//         const processedPosts = removeEmptyLinks(posts);
-//         console.log(processedPosts);
-//         const w = week();
-//         const y = (new Date()).getFullYear();
-//         updateCatalog(sub, y, w);
-//         const compiledList = new List({
-//             week: w,
-//             year: y,
-//             subreddit: sub,
-//             created: Date.now(),
-//             posts: processedPosts
-//         });
-//         compiledList.save((err) => {
-//             if (err) {
-//                 console.log(err);
-//             }
-//             console.log('COMPLETE: 🔥');
-//         });
-//     });
-// });
+subredditList.map(sub => {
+    fetchSubreddit(sub, 100, 'week').then(posts => {
+        const processedPosts = removeEmptyLinks(posts);
+        console.log(processedPosts);
+        const w = week();
+        const y = (new Date()).getFullYear();
+        updateCatalog(sub, y, w);
+        const compiledList = new List({
+            week: w,
+            year: y,
+            subreddit: sub,
+            created: Date.now(),
+            posts: processedPosts
+        });
+        compiledList.save((err) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log('COMPLETE: 🔥');
+        });
+    });
+});
 
 function updateCatalog(sub, year, week) {
     console.log('####>>>>>>>SUBBBBBBB: ' + sub);

@@ -1,8 +1,9 @@
 import * as express from 'express';
+import List from '../models/list';
+import Catalog from '../models/catalog';
 
 const router = express.Router();
 
-import List from '../models/list';
 
 router.get('/', (req, res) => {
     res.status(200).json({
@@ -11,8 +12,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/list', (req, res) => {
-    // TODO - use req / params for query
-    // e.g. http://localhost:3000/api/list?week=32&year=2017&subreddit=entrepreneur
     const week = req.query.week ? req.query.week : 0;
     const year = req.query.year ? req.query.year : 0;
     const subreddit = req.query.subreddit ? req.query.subreddit : '';
@@ -35,6 +34,28 @@ router.get('/list', (req, res) => {
         } else {
             res.json({
                 info: 'No list matching that search found'
+            });
+        }
+    });
+});
+
+router.get('/catalog', (req, res) => {
+    Catalog.find({}, (err, catalog) => {
+        if (err) {
+            console.log(err);
+            res.json({
+                info: 'Error while retrieving catalog',
+                error: err
+            });
+        }
+        if (catalog) {
+            res.json({
+                info: 'Found Catalog',
+                data: catalog
+            })
+        } else {
+            res.json({
+                info: 'No catalog found'
             });
         }
     });

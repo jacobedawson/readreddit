@@ -7,21 +7,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./filter-bar.component.scss']
 })
 export class FilterBarComponent implements OnInit {
-
-  subreddits = {
-    1: 'startups',
-    2: 'entrepreneur',
-    3: 'webdev'
-  };
-  selectedSubreddit = this.subreddits[1];
+  catalog = [];
+  subreddits = [];
+  selectedSubreddit = 'startups';
 
   constructor(private postService: PostService) {}
 
   ngOnInit() {
+    this.postService.getCatalog().subscribe(res => {
+      if (res['error']) {
+        console.log(res['error']);
+      }
+      if (res['data']) {
+        this.catalog = res['data'];
+        this.catalog.map(sub => {
+          this.subreddits.push(sub.subreddit);
+        });
+      }
+    });
   }
 
+
+
+  // On the selection of a subreddit
   onSubredditSelection(e) {
-    this.selectedSubreddit = this.subreddits[e.target.value];
+    this.selectedSubreddit = e.target.value;
     this.postService.getSubredditPosts(this.selectedSubreddit);
   }
 

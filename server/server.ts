@@ -77,11 +77,11 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
         });
 };
 
-const subredditList = [
-    'webdev',
-    'entrepreneur',
-    'startups'
-];
+// const subredditList = [
+//     'webdev',
+//     'entrepreneur',
+//     'startups'
+// ];
 // subredditList.map(sub => {
 //     fetchSubreddit(sub, 100, 'week').then(posts => {
 //         const processedPosts = removeEmptyLinks(posts);

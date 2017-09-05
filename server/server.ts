@@ -78,12 +78,10 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
 };
 
 const subredditList = [
-    'seduction'
-    // 'fitness',
-    // 'seduction',
-    // 'webdev',
-    // 'entrepreneur',
-    // 'startups'
+    'seduction',
+    'webdev',
+    'entrepreneur',
+    'startups'
 ];
 subredditList.map(sub => {
     fetchSubreddit(sub, 100, 'week').then(posts => {
@@ -173,9 +171,12 @@ function updateCatalog(sub, year, week) {
 
 // TODO - null values are still making it into the links 
 function removeEmptyLinks(posts) {
+    // return an array of filtered posts
     return posts.filter(singlePost => {
-        singlePost = singlePost.links.filter(Boolean); // return truthy values
-        return singlePost.length > 0;
+        // mutate the post by removing null values
+        singlePost.links = singlePost.links.filter(Boolean); 
+        // return only the posts that have actual links
+        return singlePost.links.length > 0;
     });
 }
 

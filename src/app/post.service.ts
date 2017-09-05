@@ -16,15 +16,16 @@ export class PostService {
   }
 
   // this should take in the most recent week / year
+  // TODO - remove the hardcoded week & year
   getPosts() {
-    return this.http.get('http://localhost:3000/api/list?week=35&year=2017&subreddit=startups');
+    return this.http.get('http://localhost:3000/api/list?week=36&year=2017&subreddit=startups');
   }
 
   // This takes in a sub. TODO take in week / year based on select options for each subreddit
   getSubredditPosts(sub) {
     console.log(`Getting ${sub}`);
     this.http.get(
-      `http://localhost:3000/api/list?week=35&year=2017&subreddit=${sub}`
+      `http://localhost:3000/api/list?week=36&year=2017&subreddit=${sub}`
     ).subscribe(res => {
       this.subject.next(res);
     });

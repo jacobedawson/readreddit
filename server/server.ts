@@ -77,33 +77,40 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
         });
 };
 
-// const subredditList = [
-//     'webdev',
-//     'entrepreneur',
-//     'startups'
-// ];
-// subredditList.map(sub => {
-//     fetchSubreddit(sub, 100, 'week').then(posts => {
-//         const processedPosts = removeEmptyLinks(posts);
-//         console.log(processedPosts);
-//         const w = week();
-//         const y = (new Date()).getFullYear();
-//         updateCatalog(sub, y, w);
-//         const compiledList = new List({
-//             week: w,
-//             year: y,
-//             subreddit: sub,
-//             created: Date.now(),
-//             posts: processedPosts
-//         });
-//         compiledList.save((err) => {
-//             if (err) {
-//                 console.log(err);
-//             }
-//             console.log('COMPLETE: 🔥');
-//         });
-//     });
-// });
+const subredditList = [
+    'seduction'
+    // 'fitness',
+    // 'seduction',
+    // 'webdev',
+    // 'entrepreneur',
+    // 'startups'
+];
+subredditList.map(sub => {
+    fetchSubreddit(sub, 100, 'week').then(posts => {
+        const processedPosts = removeEmptyLinks(posts);
+        console.log(processedPosts);
+        if (processedPosts.length === 0) {
+            console.log('No content, skipping this subreddit');
+            return;
+        }
+        const w = week();
+        const y = (new Date()).getFullYear();
+        updateCatalog(sub, y, w);
+        const compiledList = new List({
+            week: w,
+            year: y,
+            subreddit: sub,
+            created: Date.now(),
+            posts: processedPosts
+        });
+        compiledList.save((err) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log('COMPLETE: 🔥');
+        });
+    });
+});
 
 function updateCatalog(sub, year, week) {
     console.log('####>>>>>>>SUBBBBBBB: ' + sub);
@@ -164,12 +171,11 @@ function updateCatalog(sub, year, week) {
     });
 }
 
+// TODO - null values are still making it into the links 
 function removeEmptyLinks(posts) {
-    return posts.filter(post => {
-        const filteredArray = post.links.filter((link) => {
-            return link !== undefined;
-        });
-        return filteredArray.length > 0;
+    return posts.filter(singlePost => {
+        singlePost = singlePost.links.filter(Boolean); // return truthy values
+        return singlePost.length > 0;
     });
 }
 

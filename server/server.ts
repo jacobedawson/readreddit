@@ -82,18 +82,18 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
     'seduction',
     'webdev',
     'entrepreneur',
-    'startups'
-].map(s => {
-    // TODO: inefficient calls, violates DRY
-    const w = week();
-    const y = (new Date()).getFullYear();
-    // goal - filter out duplicates
-    return !List.findOne({
-        subreddit: s,
-        week: w,
-        year: y
-    }).count().exec();
-}).map(sub => {
+    'startups',
+    'science',
+    'explainlikeimfive',
+    'askscience',
+    'history',
+    'personalfinance',
+    'GetMotivated',
+    'philosophy',
+    'atheism',
+    'programming',
+    'comics'
+].map(sub => {
     console.log(sub);
     // TODO: inefficient calls, violates DRY
     const w = week();
@@ -119,7 +119,8 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
             }
             console.log('COMPLETE: 🔥');
         });
-    }).catch(() => {
+    }).catch((e) => {
+        console.log(e);
         console.log(`${sub} has already been cached for ${w} ${y}`);
     });
 });

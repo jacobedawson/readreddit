@@ -77,13 +77,27 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
         });
 };
 
-const subredditList = [
+// Start with array, check no dupes then fetch & so on...
+[
     'seduction',
     'webdev',
     'entrepreneur',
     'startups'
-];
-subredditList.map(sub => {
+].map(s => {
+    // TODO: inefficient calls, violates DRY
+    const w = week();
+    const y = (new Date()).getFullYear();
+    // goal - filter out duplicates
+    return !List.findOne({
+        subreddit: s,
+        week: w,
+        year: y
+    }).count().exec();
+}).map(sub => {
+    console.log(sub);
+    // TODO: inefficient calls, violates DRY
+    const w = week();
+    const y = (new Date()).getFullYear();
     fetchSubreddit(sub, 100, 'week').then(posts => {
         const processedPosts = removeEmptyLinks(posts);
         console.log(processedPosts);
@@ -91,8 +105,6 @@ subredditList.map(sub => {
             console.log('No content, skipping this subreddit');
             return;
         }
-        const w = week();
-        const y = (new Date()).getFullYear();
         updateCatalog(sub, y, w);
         const compiledList = new List({
             week: w,
@@ -107,6 +119,8 @@ subredditList.map(sub => {
             }
             console.log('COMPLETE: 🔥');
         });
+    }).catch(() => {
+        console.log(`${sub} has already been cached for ${w} ${y}`);
     });
 });
 
@@ -174,7 +188,7 @@ function removeEmptyLinks(posts) {
     // return an array of filtered posts
     return posts.filter(singlePost => {
         // mutate the post by removing null values
-        singlePost.links = singlePost.links.filter(Boolean); 
+        singlePost.links = singlePost.links.filter(Boolean);
         // return only the posts that have actual links
         return singlePost.links.length > 0;
     });

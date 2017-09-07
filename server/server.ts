@@ -55,30 +55,35 @@ function checkPostForBookLinks(postData) {
     for the past X amount of time
 */
 const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'month') {
-    return r.getSubreddit(name)
-        .getTop({ limit, time })
-        .then()
-        .map((post, index) => { // map over each post, return an array of processed posts
-            return {
-                index,
-                title: post.title,
-                id: post.id,
-                published: post.created_utc,
-                score: post.score,
-                url: post.url,
-                author: post.author.name,
-                comments: post.num_comments,
-                links: []
-            };
-        })
-        .then()
-        .map(post => { // map over each processed post, return a processed array
-            return fetchSingleRedditPost(post);
-        });
+    try {
+        const processedSubreddit = await r.getSubreddit(name)
+            .getTop({ limit, time })
+            .then()
+            .map((post, index) => { // map over each post, return an array of processed posts
+                return {
+                    index,
+                    title: post.title,
+                    id: post.id,
+                    published: post.created_utc,
+                    score: post.score,
+                    url: post.url,
+                    author: post.author.name,
+                    comments: post.num_comments,
+                    links: []
+                };
+            })
+            .then()
+            .map(async post => { // map over each processed post, return a processed array
+                return await fetchSingleRedditPost(post);
+            });
+        return processedSubreddit;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
-// Start with array, check no dupes then fetch & so on...
-[
+
+getNewPosts([
     'seduction',
     'webdev',
     'entrepreneur',
@@ -93,37 +98,39 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
     'atheism',
     'programming',
     'comics'
-].map(sub => {
-    console.log(sub);
-    // TODO: inefficient calls, violates DRY
+]);
+function getNewPosts(listOfSubs) {
     const w = week();
     const y = (new Date()).getFullYear();
-    fetchSubreddit(sub, 100, 'week').then(posts => {
-        const processedPosts = removeEmptyLinks(posts);
-        console.log(processedPosts);
-        if (processedPosts.length === 0) {
-            console.log('No content, skipping this subreddit');
-            return;
-        }
-        updateCatalog(sub, y, w);
-        const compiledList = new List({
-            week: w,
-            year: y,
-            subreddit: sub,
-            created: Date.now(),
-            posts: processedPosts
-        });
-        compiledList.save((err) => {
-            if (err) {
-                console.log(err);
+    listOfSubs.map(sub => {
+        console.log(sub);
+        fetchSubreddit(sub, 100, 'week').then(posts => {
+            const processedPosts = removeEmptyLinks(posts);
+            console.log(processedPosts);
+            if (processedPosts.length === 0) {
+                console.log('No content, skipping this subreddit');
+                return;
             }
-            console.log('COMPLETE: 🔥');
+            updateCatalog(sub, y, w);
+            const compiledList = new List({
+                week: w,
+                year: y,
+                subreddit: sub,
+                created: Date.now(),
+                posts: processedPosts
+            });
+            compiledList.save((err) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log('COMPLETE: 🔥');
+            });
+        }).catch((e) => {
+            console.log(e);
+            console.log(`${sub} has already been cached for ${w} ${y}`);
         });
-    }).catch((e) => {
-        console.log(e);
-        console.log(`${sub} has already been cached for ${w} ${y}`);
     });
-});
+}
 
 function updateCatalog(sub, year, week) {
     console.log('####>>>>>>>SUBBBBBBB: ' + sub);

@@ -11,6 +11,9 @@ const ListSchema = new Schema({
     posts: [PostSchema] // array of posts
 });
 
+// Create a compound index on subreddit, year & week to prevent dupes
+ListSchema.index({subreddit: 1, week: 1, year: 1}, {unique: true});
+
 const List = mongoose.model('List', ListSchema);
 
 export default List;

@@ -3,7 +3,9 @@
     <div class="d-flex align-items-center flex-row flex-wrap">
       <!-- <div class="post-thumbnail" [style.background-image]="'url(https://a.thumbs.redditmedia.com/MmniGn5FJiynp9_i67pL-cJH42boCYMO3fRMzZc3xU0.jpg)'"></div> -->
       <div class="card-block">
-        <h4 class="card-title">{{postData.title}}</h4>
+        <h4 class="card-title">
+          <a href="{{postData.url}}" target="_blank" rel="noopener noreferrer">{{postData.title}}</a>
+        </h4>
         <div class="d-inline-flex post-stats">
           <p class="card-text">Score: {{postData.score}}</p>
           <p class="card-text ml-3">Comments: {{postData.comments}}</p>

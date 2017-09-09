@@ -16,7 +16,15 @@
         }
     }
     @media (max-width: 768px) {
+        padding: 10px;
+    }
+    @media (max-width: 576px) {
         padding: 0;
+        border: none;
+        &:hover {
+            border: none;
+            transform: none;
+        }
     }
 }
 

@@ -1,8 +1,12 @@
 import * as express from 'express';
+import * as week from 'current-week-number';
 import List from '../models/list';
 import Catalog from '../models/catalog';
 
 const router = express.Router();
+
+const w = week();
+const y = (new Date()).getFullYear();
 
 
 router.get('/', (req, res) => {
@@ -11,15 +15,13 @@ router.get('/', (req, res) => {
     });
 });
 
+// Get all current lists, or the list for a particular subreddit
 router.get('/list', (req, res) => {
     const week = req.query.week ? req.query.week : 0;
     const year = req.query.year ? req.query.year : 0;
-    const subreddit = req.query.subreddit ? req.query.subreddit : '';
-    List.find({
-        week: week,
-        year: year,
-        subreddit: subreddit
-    }, (err, list) => {
+    const subreddit = req.query.subreddit ? req.query.subreddit : false;
+    const query = subreddit ? { week, year, subreddit } : { week: w, year: y };
+    List.find(query, (err, list) => {
         if (err) {
             res.json({
                 info: 'Error while retrieving list',
@@ -52,7 +54,7 @@ router.get('/catalog', (req, res) => {
             res.json({
                 info: 'Found Catalog',
                 data: catalog
-            })
+            });
         } else {
             res.json({
                 info: 'No catalog found'

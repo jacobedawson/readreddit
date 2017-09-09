@@ -83,22 +83,22 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
 };
 
 
-getNewPosts([
-    'seduction',
-    'webdev',
-    'entrepreneur',
-    'startups',
-    'science',
-    'explainlikeimfive',
-    'askscience',
-    'history',
-    'personalfinance',
-    'GetMotivated',
-    'philosophy',
-    'atheism',
-    'programming',
-    'comics'
-]);
+// getNewPosts([
+//     'seduction',
+//     'webdev',
+//     'entrepreneur',
+//     'startups',
+//     'science',
+//     'explainlikeimfive',
+//     'askscience',
+//     'history',
+//     'personalfinance',
+//     'GetMotivated',
+//     'philosophy',
+//     'atheism',
+//     'programming',
+//     'comics'
+// ]);
 function getNewPosts(listOfSubs) {
     const w = week();
     const y = (new Date()).getFullYear();
@@ -127,7 +127,7 @@ function getNewPosts(listOfSubs) {
             });
         }).catch((e) => {
             console.log(e);
-            console.log(`${sub} has already been cached for ${w} ${y}`);
+            console.log(`Error collecting ${sub}`);
         });
     });
 }
@@ -173,15 +173,15 @@ function updateCatalog(sub, year, week) {
             });
         } else {
             // Create a new entry if none exists
-            const x = new Catalog({
+            const newCatalogEntry = new Catalog({
                 subreddit: sub,
                 dates: {
                     year,
                     week
                 }
             });
-            console.log('THIS IS X: ' + x);
-            x.save(e => {
+            console.log('THIS IS X: ' + newCatalogEntry);
+            newCatalogEntry.save(e => {
                 console.log('writing new');
                 if (e) {
                     console.log(e);
@@ -191,7 +191,6 @@ function updateCatalog(sub, year, week) {
     });
 }
 
-// TODO - null values are still making it into the links 
 function removeEmptyLinks(posts) {
     // return an array of filtered posts
     return posts.filter(singlePost => {

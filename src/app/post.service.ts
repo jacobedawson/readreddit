@@ -15,13 +15,12 @@ export class PostService {
     return this.http.get('http://localhost:3000/api/catalog');
   }
 
-  // this should take in the most recent week / year
-  // TODO - remove the hardcoded week & year
+  // This will get all subreddits for the latest week
   getPosts() {
-    return this.http.get('http://localhost:3000/api/list?week=36&year=2017&subreddit=startups');
+    return this.http.get('http://localhost:3000/api/list');
   }
 
-  // This takes in a sub. TODO take in week / year based on select options for each subreddit
+  // This get the info for a particular subreddit
   getSubredditPosts(sub) {
     console.log(`Getting ${sub}`);
     this.http.get(

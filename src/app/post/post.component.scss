@@ -8,6 +8,10 @@
     padding: 24px;
     h4.card-title {
         color: rgb(222, 222, 222);
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
     }
     &:hover {
         border-left: 3px solid $rr-pink;

@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class FilterBarComponent implements OnInit {
   catalog = [];
   subreddits = [];
-  selectedSubreddit = 'startups';
+  selectedSubreddit = '';
 
   constructor(private postService: PostService) {}
 
@@ -26,8 +26,6 @@ export class FilterBarComponent implements OnInit {
       }
     });
   }
-
-
 
   // On the selection of a subreddit
   onSubredditSelection(e) {

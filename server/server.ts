@@ -83,7 +83,17 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
 };
 
 
-// getNewPosts([
+getNewPosts([
+    'bookhaul',
+    'whatsthatbook'
+    // 'bookClub',
+    // 'BookLists',
+    // 'Fantasy',
+    // 'HorrorLit',
+    // 'YALit'
+    // 'suggestmeabook'
+    // 'booksuggestions'
+    // 'printSF'
 //     'seduction',
 //     'webdev',
 //     'entrepreneur',
@@ -98,7 +108,7 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
 //     'atheism',
 //     'programming',
 //     'comics'
-// ]);
+]);
 function getNewPosts(listOfSubs) {
     const w = week();
     const y = (new Date()).getFullYear();

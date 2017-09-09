@@ -3,10 +3,15 @@
   <p class="text-center">Get a weekly newsletter of reading suggestions</p>
   <form class="newsletter-form form-inline">
     <div class="form-group">
-      <input type="email" name="email" value="" placeholder="Enter email address">
-      <button class="rr-button primary" type="submit">Submit</button>
+      <input [(ngModel)]="email" required type="email" name="email" value="" placeholder="Enter email address">
+      <button (click)="onSubmit()" class="rr-button primary">Submit</button>
     </div>
   </form>
+  <div class="subcribe-status">
+    <p>
+      {{this.subscribeStatus}}
+    </p>
+  </div>
   <ul class="nav justify-content-center">
     <li><a href="#">Contact</a></li>
     <li><a href="#">Something Else</a></li>

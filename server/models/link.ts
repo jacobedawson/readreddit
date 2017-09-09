@@ -11,4 +11,7 @@ const LinkSchema = new Schema({
     descript: String
 });
 
+// Create a compound index to prevent dupes
+LinkSchema.index({ISBN: 1, title: 1, author: 1}, {unique: true});
+
 export { LinkSchema };

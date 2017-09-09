@@ -1,10 +1,15 @@
-import { PostService } from './post.service';
+/* Modules */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 
+/* Services */
+import { NewsletterService } from './newsletter.service';
+import { PostService } from './post.service';
+
+/* Components */
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
@@ -35,7 +40,7 @@ import { BookcardComponent } from './bookcard/bookcard.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [PostService],
+  providers: [PostService, NewsletterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

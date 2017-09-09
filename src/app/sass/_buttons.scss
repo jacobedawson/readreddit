@@ -1,20 +1,24 @@
-a.rr-button {
+.rr-button {
     display: flex;
     align-items: center;
     justify-content: center;
     border: 2px solid #ccc;
     padding: 10px 16px;
     color: #ccc;
-    text-decoration: none;
+    text-decoration: none !important;
     transition: 0.3s all ease-in-out;
     display: block;
     text-align: center;
-    max-width: 200px;
+    cursor: pointer;
+    @media (min-width: 577px) {
+        max-width: 200px;
+    }
 }
 
 .rr-button.primary {
     border: 2px solid $rr-red;
     color: $rr-red;
+    background: transparent;
     &:hover {
         background: $rr-red;
         color: #fff;

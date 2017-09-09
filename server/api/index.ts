@@ -1,13 +1,9 @@
 import * as express from 'express';
-import * as week from 'current-week-number';
+import * as currentWeek from 'current-week-number';
 import List from '../models/list';
 import Catalog from '../models/catalog';
 
 const router = express.Router();
-
-const w = week();
-const y = (new Date()).getFullYear();
-
 
 router.get('/', (req, res) => {
     res.status(200).json({
@@ -17,6 +13,8 @@ router.get('/', (req, res) => {
 
 // Get all current lists, or the list for a particular subreddit
 router.get('/list', (req, res) => {
+    const w = currentWeek();
+    const y = (new Date()).getFullYear();
     const week = req.query.week ? req.query.week : 0;
     const year = req.query.year ? req.query.year : 0;
     const subreddit = req.query.subreddit ? req.query.subreddit : false;

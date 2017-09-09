@@ -21,10 +21,9 @@ export class PostService {
   }
 
   // This get the info for a particular subreddit
-  getSubredditPosts(sub) {
-    console.log(`Getting ${sub}`);
+  getSubredditPosts({sub, week, year}) {
     this.http.get(
-      `http://localhost:3000/api/list?week=36&year=2017&subreddit=${sub}`
+      `http://localhost:3000/api/list?week=${week}&year=${year}&subreddit=${sub}`
     ).subscribe(res => {
       this.subject.next(res);
     });

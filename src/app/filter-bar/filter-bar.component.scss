@@ -1,0 +1,25 @@
+form {
+    padding: 16px;
+    @media (max-width: 576px) {
+        width: 100%;
+        max-width: 400px;
+        flex-direction: column;
+    }
+}
+
+.rr-button {
+    height: 38px;
+    padding: 0 16px;
+    @media (max-width: 576px) {
+        width: 100%;
+    }
+}
+
+select {
+    border-radius: 0;
+    margin-right: 8px;
+    @media (max-width: 576px) {
+        margin: 0 0 8px 0;
+        width: 100%;
+    }
+}

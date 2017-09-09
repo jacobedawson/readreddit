@@ -8,10 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FilterBarComponent implements OnInit {
   catalog = [];
-  subreddits = [];
-  selectedSubreddit = '';
+  selectedSubreddit = false;
+  selectedDate;
+  activeSub: Object = {};
 
-  constructor(private postService: PostService) {}
+  constructor(private postService: PostService) { }
 
   ngOnInit() {
     this.postService.getCatalog().subscribe(res => {
@@ -20,9 +21,8 @@ export class FilterBarComponent implements OnInit {
       }
       if (res['data']) {
         this.catalog = res['data'];
-        this.catalog.map(sub => {
-          this.subreddits.push(sub.subreddit);
-        });
+        this.activeSub = this.catalog[0];
+        this.selectedSubreddit = this.catalog[0].subreddit;
       }
     });
   }
@@ -30,8 +30,31 @@ export class FilterBarComponent implements OnInit {
   // On the selection of a subreddit
   onSubredditSelection(e) {
     this.selectedSubreddit = e.target.value;
-    this.postService.getSubredditPosts(this.selectedSubreddit);
+    this.selectedDate = false;
+    this.activeSub = this.catalog.filter(cat => {
+      return cat.subreddit === this.selectedSubreddit;
+    })[0] || [];
+    this.postService.getSubredditPosts({
+      sub: this.selectedSubreddit,
+      week: 36,
+      year: 2017
+    });
   }
 
+  onDateSelection(e) {
+    this.selectedDate = e.target.value;
+  }
+
+  onFilterSearch() {
+    if (this.selectedSubreddit && this.selectedDate) {
+      const week = this.selectedDate.slice(0, 2);
+      const year = this.selectedDate.slice(2);
+      this.postService.getSubredditPosts({
+        sub: this.selectedSubreddit,
+        week,
+        year
+      });
+    }
+  }
 
 }

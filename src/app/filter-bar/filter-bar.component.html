@@ -1,8 +1,15 @@
 <div class="row p-2 justify-content-center">
-  <form class="form-inline justify-content-between p-4">
-    <select (change)="onSubredditSelection($event)" class="custom-select mr-2" id="inlineFormCustomSelect">
-      <option *ngFor="let entry of catalog" value="{{entry.subreddit}}">{{entry.subreddit}}</option>
+  <form class="form-inline justify-content-between">
+    <select (change)="onSubredditSelection($event)" class="custom-select" id="inlineFormCustomSelect">
+      <option *ngFor="let entry of catalog" value="{{entry.subreddit}}">
+        {{entry.subreddit}}
+      </option>
     </select>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <select (change)="onDateSelection($event)" class="custom-select">
+      <option *ngFor="let date of activeSub.dates" value="{{date.week}}{{date.year}}">
+          Week {{date.week}} - {{date.year}}
+      </option>
+    </select>
+    <button type="submit" (click)="onFilterSearch()" class="rr-button primary">Submit</button>
   </form>
 </div>

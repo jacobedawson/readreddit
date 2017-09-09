@@ -1,0 +1,70 @@
+@import '../sass/_colors.scss';
+@import '../sass/_mixins.scss';
+
+footer {
+    width: 100%;
+    border-top: 1px solid $rr-red;
+    padding: 36px 16px;
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    h4 {
+        color: $rr-red;
+    }
+    
+    p {
+        color: $rr-grey-mid;
+    }
+    ul.nav {
+        margin-top: 24px;
+        li {
+            margin-right: 5px;
+            a {
+                color: $rr-grey-mid;
+            }
+        }
+    }
+}
+
+
+
+.newsletter-form {
+    // background: rgb(255, 0, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .form-group {
+        position: relative;
+    }
+    input[type="email"] {
+        transition: all ease-in-out 0.3s;
+        height: 54px;
+        max-width: 100%;
+        padding: 8px;
+        text-align: left;
+        text-overflow: ellipsis;
+        min-width: 400px;
+        background: transparent;
+        border: 1px solid $rr-red;
+        color: $rr-pink;
+        &:focus, &:hover {
+            transition: 0.3s ease-in-out all;
+            border: 2px solid $rr-pink;
+            outline: none;
+        }
+        @include breakpoint(xs) {
+            min-width: 300px;
+        }
+    }
+}
+
+.rr-button {
+    position: absolute;
+    height: 54px;
+    right: 0;
+    top: 0;
+    border: 0;
+}
+

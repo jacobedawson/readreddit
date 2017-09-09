@@ -1,12 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 @import './app/sass/_colors.scss';
 @import './app/sass/_buttons.scss';
+@import './app/sass/_mixins.scss';
 
 
 body {
     font-family: 'Roboto', sans-serif;
     color: $rr-grey-mid;
     background: $rr-blue;
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+}
+
+.content-container {
+    min-height: 900px;
 }
 
 // TODO move to card styles
@@ -16,7 +24,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 50% 50%;
-    @media (max-width: 1200px) {
+    @include breakpoint(lg) {
         margin: 10px auto;
         width: 100%;
     }

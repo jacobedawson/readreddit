@@ -21,7 +21,6 @@ export class FilteredResultsComponent implements OnInit {
   // of message & data for the user
   ngOnInit() {
     this.postService.getPosts().subscribe((res) => {
-      console.log(res['data']);
       this.posts = res['data'][0].posts;
     });
   }

@@ -1,7 +1,12 @@
 @import '../sass/_colors.scss';
+@import '../sass/_mixins.scss';
 
 .row {
     flex-direction: column;
+    padding: 24px;
+    @include breakpoint(xs) {
+        padding-bottom: 0;
+    }
 }
 
 h1 {

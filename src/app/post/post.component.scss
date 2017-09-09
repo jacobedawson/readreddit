@@ -1,5 +1,7 @@
 @import '../sass/_variables';
 @import '../sass/_colors';
+@import '../sass/_mixins.scss';
+
 .post-card {
     margin-bottom: 10px;
     background: $rr-blue;
@@ -20,12 +22,18 @@
             color: $rr-pink;
         }
     }
-    @media (max-width: 768px) {
+    @include breakpoint(sm) {
         padding: 0;
         border: 0;
         &:hover {
             border: 0;
         }
+    }
+}
+
+.post-stats {
+    @include breakpoint(xs) {
+        font-size: 14px;
     }
 }
 
@@ -35,7 +43,7 @@
     h4 {
         margin-top: 16px;
     }
-    @media (max-width: 768px) {
+    @include breakpoint(sm) {
         margin-left: 0;
         .post-stats {
             width: 100%;

@@ -15,4 +15,10 @@ const PostSchema = new Schema({
     links: [LinkSchema]
 });
 
+PostSchema.index({
+    id: 1
+}, {
+    unique: true
+});
+
 export { PostSchema };

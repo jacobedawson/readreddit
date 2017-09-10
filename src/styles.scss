@@ -25,6 +25,14 @@ body {
     min-height: 900px;
 }
 
+a {
+    transition: 0.3s all ease-in-out;
+    color: $rr-pink;
+    &:hover {
+        color: lighten($rr-pink, 10%);
+    }
+}
+
 a.active {
     font-weight: bold;
 }

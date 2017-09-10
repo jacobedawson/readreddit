@@ -12,7 +12,13 @@ import * as mongoose from 'mongoose';
 import * as cron from 'node-cron'; // cron.schedule ...
 import * as week from 'current-week-number';
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/reddreader');
+// mongoose.connect('mongodb://localhost/reddreader');
+mongoose.connect(
+    'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
+
+/* 
+mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin
+*/
 
 import List from './models/list';
 import Catalog from './models/catalog';
@@ -83,7 +89,7 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
 };
 
 
-cron.schedule('0 30 14 * * *',
+cron.schedule('0 30 22 * * 0',
     () => {
         console.log('Running Cron Job #1');
         getNewPosts([
@@ -97,7 +103,7 @@ cron.schedule('0 30 14 * * *',
         ]);
     }, true
 );
-cron.schedule('0 0 15 * * *',
+cron.schedule('0 0 23 * * 0',
     () => {
         console.log('Running Cron Job #2');
         getNewPosts([
@@ -111,7 +117,7 @@ cron.schedule('0 0 15 * * *',
         ]);
     }, true
 );
-cron.schedule('0 30 15 * * *',
+cron.schedule('0 30 23 * * 0',
     () => {
         console.log('Running Cron Job #3');
         getNewPosts([
@@ -123,7 +129,7 @@ cron.schedule('0 30 15 * * *',
         ]);
     }, true
 );
-cron.schedule('0 0 16 * * *',
+cron.schedule('0 59 23 * * 0',
     () => {
         console.log('Running Cron Job #4');
         getNewPosts([

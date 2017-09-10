@@ -82,13 +82,10 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
     }
 };
 
-/* Daily Cron Jobs */
-const block1 = new cron({
-    // sec, min, hour, days of month, month, days of week
-    cronTime: '00 00 11 * * *',
-    // run this function
-    function() {
-        /* Runs every day at 11:00:00 AM */
+
+cron.schedule('0 30 14 * * *',
+    () => {
+        console.log('Running Cron Job #1');
         getNewPosts([
             'askscience',
             'atheism',
@@ -98,15 +95,11 @@ const block1 = new cron({
             'booksuggestions',
             'comics'
         ]);
-    },
-    start: true,
-    timeZone: 'America/Los_Angeles'
-});
-const block2 = new cron({
-    cronTime: '00 00 12 * * *',
-    // run this function
-    function() {
-        /* Runs every day at 11:00:00 AM */
+    }, true
+);
+cron.schedule('0 0 15 * * *',
+    () => {
+        console.log('Running Cron Job #2');
         getNewPosts([
             'entrepreneur',
             'explainlikeimfive',
@@ -116,15 +109,11 @@ const block2 = new cron({
             'HorrorLit',
             'personalfinance'
         ]);
-    },
-    start: true,
-    timeZone: 'America/Los_Angeles'
-});
-const block3 = new cron({
-    cronTime: '00 00 13 * * *',
-    // run this function
-    function() {
-        /* Runs every day at 13:00:00 PM */
+    }, true
+);
+cron.schedule('0 30 15 * * *',
+    () => {
+        console.log('Running Cron Job #3');
         getNewPosts([
             'philosophy',
             'printSF',
@@ -132,15 +121,11 @@ const block3 = new cron({
             'science',
             'seduction'
         ]);
-    },
-    start: true,
-    timeZone: 'America/Los_Angeles'
-});
-const block4 = new cron({
-    cronTime: '00 00 14 * * *',
-    // run this function
-    function() {
-        /* Runs every day at 14:00:00 PM */
+    }, true
+);
+cron.schedule('0 0 16 * * *',
+    () => {
+        console.log('Running Cron Job #4');
         getNewPosts([
             'startups',
             'suggestmeabook',
@@ -148,41 +133,35 @@ const block4 = new cron({
             'whatsthatbook',
             'YALit'
         ]);
-    },
-    start: true,
-    timeZone: 'America/Los_Angeles'
-});
+    }, true
+);
 
-block1.start();
-block2.start();
-block3.start();
-block4.start();
 
 // getNewPosts([
-    // 'askscience',
-    // 'atheism',
-    // 'bookClub',
-    // 'bookhaul',
-    // 'BookLists',
-    // 'booksuggestions',
-    // 'comics',
-    // 'entrepreneur',
-    // 'explainlikeimfive',
-    // 'Fantasy',
-    // 'GetMotivated',
-    // 'history',
-    // 'HorrorLit',
-    // 'personalfinance',
-    // 'philosophy',
-    // 'printSF',
-    // 'programming',
-    // 'science',
-    // 'seduction',
-    // 'startups',
-    // 'suggestmeabook',
-    // 'webdev',
-    // 'whatsthatbook',
-    // 'YALit'
+// 'askscience',
+// 'atheism',
+// 'bookClub',
+// 'bookhaul',
+// 'BookLists',
+// 'booksuggestions',
+// 'comics',
+// 'entrepreneur',
+// 'explainlikeimfive',
+// 'Fantasy',
+// 'GetMotivated',
+// 'history',
+// 'HorrorLit',
+// 'personalfinance',
+// 'philosophy',
+// 'printSF',
+// 'programming',
+// 'science',
+// 'seduction',
+// 'startups',
+// 'suggestmeabook',
+// 'webdev',
+// 'whatsthatbook',
+// 'YALit'
 // ]);
 function getNewPosts(listOfSubs) {
     const w = week();

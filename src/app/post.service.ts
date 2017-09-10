@@ -12,18 +12,18 @@ export class PostService {
 
   // This should run once on load to fill the select menus
   getCatalog() {
-    return this.http.get('https://localhost:3000/api/catalog');
+    return this.http.get('https://reddreader.com/api/catalog');
   }
 
   // This will get all subreddits for the latest week
   getPosts() {
-    return this.http.get('https://localhost:3000/api/list');
+    return this.http.get('https://reddreader.com/api/list');
   }
 
   // This get the info for a particular subreddit
   getSubredditPosts({sub, week, year}) {
     this.http.get(
-      `https://localhost:3000/api/list?week=${week}&year=${year}&subreddit=${sub}`
+      `https://reddreader.com/api/list?week=${week}&year=${year}&subreddit=${sub}`
     ).subscribe(res => {
       this.subject.next(res);
     });

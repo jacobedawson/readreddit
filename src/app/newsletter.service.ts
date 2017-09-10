@@ -7,7 +7,7 @@ export class NewsletterService {
   constructor(private http: HttpClient) {}
 
   addSubscriber(email) {
-    return this.http.post('http://localhost:3000/api/newsletter', {
+    return this.http.post('https://localhost:3000/api/newsletter', {
       email
     });
   }

@@ -82,8 +82,83 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
     }
 };
 
+/* Daily Cron Jobs */
+const block1 = new cron({
+    // sec, min, hour, days of month, month, days of week
+    cronTime: '00 00 11 * * *',
+    // run this function
+    function() {
+        /* Runs every day at 11:00:00 AM */
+        getNewPosts([
+            'askscience',
+            'atheism',
+            'bookClub',
+            'bookhaul',
+            'BookLists',
+            'booksuggestions',
+            'comics'
+        ]);
+    },
+    start: true,
+    timeZone: 'America/Los_Angeles'
+});
+const block2 = new cron({
+    cronTime: '00 00 12 * * *',
+    // run this function
+    function() {
+        /* Runs every day at 11:00:00 AM */
+        getNewPosts([
+            'entrepreneur',
+            'explainlikeimfive',
+            'Fantasy',
+            'GetMotivated',
+            'history',
+            'HorrorLit',
+            'personalfinance'
+        ]);
+    },
+    start: true,
+    timeZone: 'America/Los_Angeles'
+});
+const block3 = new cron({
+    cronTime: '00 00 13 * * *',
+    // run this function
+    function() {
+        /* Runs every day at 13:00:00 PM */
+        getNewPosts([
+            'philosophy',
+            'printSF',
+            'programming',
+            'science',
+            'seduction'
+        ]);
+    },
+    start: true,
+    timeZone: 'America/Los_Angeles'
+});
+const block4 = new cron({
+    cronTime: '00 00 14 * * *',
+    // run this function
+    function() {
+        /* Runs every day at 14:00:00 PM */
+        getNewPosts([
+            'startups',
+            'suggestmeabook',
+            'webdev',
+            'whatsthatbook',
+            'YALit'
+        ]);
+    },
+    start: true,
+    timeZone: 'America/Los_Angeles'
+});
 
-getNewPosts([
+block1.start();
+block2.start();
+block3.start();
+block4.start();
+
+// getNewPosts([
     // 'askscience',
     // 'atheism',
     // 'bookClub',
@@ -108,7 +183,7 @@ getNewPosts([
     // 'webdev',
     // 'whatsthatbook',
     // 'YALit'
-]);
+// ]);
 function getNewPosts(listOfSubs) {
     const w = week();
     const y = (new Date()).getFullYear();

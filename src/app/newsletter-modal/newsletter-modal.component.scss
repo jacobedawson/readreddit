@@ -1,0 +1,13 @@
+@import '../sass/_colors.scss';
+@import '../sass/_mixins.scss';
+
+.modal-content {
+    border: 1px solid $rr-red;
+    border-radius: 0;
+    background: $rr-blue;
+}
+
+.close {
+    color: $rr-grey-light;
+    text-shadow: none;
+}

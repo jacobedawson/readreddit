@@ -84,30 +84,30 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
 
 
 getNewPosts([
-    'bookhaul',
-    'whatsthatbook'
+    // 'askscience',
+    // 'atheism',
     // 'bookClub',
+    // 'bookhaul',
     // 'BookLists',
+    // 'booksuggestions',
+    // 'comics',
+    // 'entrepreneur',
+    // 'explainlikeimfive',
     // 'Fantasy',
+    // 'GetMotivated',
+    // 'history',
     // 'HorrorLit',
+    // 'personalfinance',
+    // 'philosophy',
+    // 'printSF',
+    // 'programming',
+    // 'science',
+    // 'seduction',
+    // 'startups',
+    // 'suggestmeabook',
+    // 'webdev',
+    // 'whatsthatbook',
     // 'YALit'
-    // 'suggestmeabook'
-    // 'booksuggestions'
-    // 'printSF'
-//     'seduction',
-//     'webdev',
-//     'entrepreneur',
-//     'startups',
-//     'science',
-//     'explainlikeimfive',
-//     'askscience',
-//     'history',
-//     'personalfinance',
-//     'GetMotivated',
-//     'philosophy',
-//     'atheism',
-//     'programming',
-//     'comics'
 ]);
 function getNewPosts(listOfSubs) {
     const w = week();

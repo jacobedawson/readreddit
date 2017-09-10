@@ -1,3 +1,6 @@
+import { NewsletterPageComponent } from './newsletter-page/newsletter-page.component';
+import { FaqComponent } from './faq/faq.component';
+import { AboutComponent } from './about/about.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { FilteredResultsComponent } from './filtered-results/filtered-results.component';
 import { HomeComponent } from './home/home.component';
@@ -12,6 +15,18 @@ const routes: Routes = [
   {
     path: 'results',
     component: FilteredResultsComponent
+  },
+  {
+    path: 'newsletter',
+    component: NewsletterPageComponent
+  },
+  {
+    path: 'faq',
+    component: FaqComponent
+  },
+  {
+    path: 'about',
+    component: AboutComponent
   },
   {
     path: '**',

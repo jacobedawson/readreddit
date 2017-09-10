@@ -20,6 +20,11 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { IntrotextComponent } from './introtext/introtext.component';
 import { FilterBarComponent } from './filter-bar/filter-bar.component';
 import { BookcardComponent } from './bookcard/bookcard.component';
+import { NewsletterModalComponent } from './newsletter-modal/newsletter-modal.component';
+import { NewsletterFormComponent } from './newsletter-form/newsletter-form.component';
+import { NewsletterPageComponent } from './newsletter-page/newsletter-page.component';
+import { AboutComponent } from './about/about.component';
+import { FaqComponent } from './faq/faq.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +37,12 @@ import { BookcardComponent } from './bookcard/bookcard.component';
     NotFoundComponent,
     IntrotextComponent,
     FilterBarComponent,
-    BookcardComponent
+    BookcardComponent,
+    NewsletterModalComponent,
+    NewsletterFormComponent,
+    NewsletterPageComponent,
+    AboutComponent,
+    FaqComponent
   ],
   imports: [
     BrowserModule,

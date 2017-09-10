@@ -1,0 +1,11 @@
+<form class="newsletter-form form-inline">
+  <div class="form-group">
+    <input [(ngModel)]="email" required type="email" name="email" value="" placeholder="Enter email address">
+    <button (click)="onSubmit()" class="rr-button primary">Submit</button>
+  </div>
+</form>
+<div class="subcribe-status">
+  <p class="text-center">
+    {{this.subscribeStatus}}
+  </p>
+</div>

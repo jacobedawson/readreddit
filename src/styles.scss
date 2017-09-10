@@ -2,6 +2,14 @@
 @import './app/sass/_colors.scss';
 @import './app/sass/_buttons.scss';
 @import './app/sass/_mixins.scss';
+@font-face {
+    font-family: 'Fontello';
+    src: url('assets/fonts/fontello.eot'),
+        url('assets/fonts/fontello.svg'),
+        url('assets/fonts/fontello.ttf'),
+        url('assets/fonts/fontello.woff'),
+        url('assets/fonts/fontello.woff2');
+}
 
 
 body {
@@ -17,6 +25,10 @@ body {
     min-height: 900px;
 }
 
+a.active {
+    font-weight: bold;
+}
+
 // TODO move to card styles
 .post-thumbnail {
     width: 100px;
@@ -27,5 +39,18 @@ body {
     @include breakpoint(lg) {
         margin: 10px auto;
         width: 100%;
+    }
+}
+
+.fontello {
+    font-family: 'Fontello';
+    font-style: normal;
+    font-size: 2rem;
+    margin: 0 5px;
+    cursor: pointer;
+    color: $rr-grey-mid;
+    transition: 0.3s all ease-in-out;
+    &:hover {
+        color: $rr-red;
     }
 }

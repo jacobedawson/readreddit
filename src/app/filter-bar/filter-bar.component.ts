@@ -10,7 +10,7 @@ export class FilterBarComponent implements OnInit {
   catalog = [];
   selectedSubreddit = false;
   selectedDate;
-  activeSub: Object = {};
+  activeSub;
 
   constructor(private postService: PostService) { }
 

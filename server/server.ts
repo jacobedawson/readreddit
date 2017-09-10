@@ -11,14 +11,12 @@ import router from './api';
 import * as mongoose from 'mongoose';
 import * as cron from 'node-cron'; // cron.schedule ...
 import * as week from 'current-week-number';
+import * as path from 'path';
 mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://localhost/reddreader');
 mongoose.connect(
     'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
 
-/* 
-mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin
-*/
 
 import List from './models/list';
 import Catalog from './models/catalog';
@@ -29,8 +27,9 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(cors());
-app.get('/', (req, res) => res.send('Hello world'));
+// app.get('/', (req, res) => res.send('Hello world'));
 app.use('/api', router);
+app.use('/', express.static(path.join(__dirname, '../public')));
 
 
 // TODO remove hardcoded credentials, use ENV VARs
@@ -361,5 +360,9 @@ function amazonItemLookup(itemID: string): Promise<any> {
         console.dir(err);
     });
 }
+
+app.get('/*', function(req, res) {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+  });
 
 app.listen(3000, () => console.log('Listening on 3000'));

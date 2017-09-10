@@ -6,7 +6,7 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "start": "node dist/server/app.js",
+    "start": "node dist/server/server.js",
     "predev": "tsc -p server",
     "preserve": "tsc -p server",
     "only": "concurrently \"tsc -w -p server\" \"nodemon --inspect dist/server/server.js --ignore server/processing/\"",

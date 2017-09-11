@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./filter-bar.component.scss']
 })
 export class FilterBarComponent implements OnInit {
-  catalog = [];
+  catalog: any = [];
   selectedSubreddit = false;
   selectedDate;
   activeSub;
@@ -16,9 +16,6 @@ export class FilterBarComponent implements OnInit {
 
   ngOnInit() {
     this.postService.getCatalog().subscribe(res => {
-      if (res['error']) {
-        console.log(res['error']);
-      }
       if (res['data']) {
         this.catalog = res['data'];
         this.activeSub = this.catalog[0];

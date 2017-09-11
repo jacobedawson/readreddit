@@ -24,7 +24,7 @@ export class FilteredResultsComponent implements OnInit {
       console.log(res);
       if (res['data']) {
         // console.log(res['data']);
-        // this.posts = res['data'][0].posts;
+        this.posts = res['data'][0].posts;
       }
     });
   }

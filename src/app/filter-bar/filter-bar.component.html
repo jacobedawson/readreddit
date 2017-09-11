@@ -6,8 +6,8 @@
       </option>
     </select>
     <select (change)="onDateSelection($event)" class="custom-select">
-      <option *ngFor="let date of activeSub.dates" value="{{date.week}}{{date.year}}">
-          Week {{date.week}} - {{date.year}}
+      <option *ngFor="let sub of activeSub" value="{{sub.dates.week}}{{sub.dates.year}}">
+          Week {{sub.dates.week}} - {{sub.dates.year}}
       </option>
     </select>
     <button type="submit" (click)="onFilterSearch()" class="rr-button primary">Submit</button>

@@ -20,8 +20,12 @@ export class FilteredResultsComponent implements OnInit {
   // If there are no posts for a particular week, there needs to be some kind 
   // of message & data for the user
   ngOnInit() {
-    this.postService.getPosts().subscribe((res) => {
-      this.posts = res['data'][0].posts;
+    this.postService.getPosts().subscribe(res => {
+      console.log(res);
+      if (res['data']) {
+        // console.log(res['data']);
+        // this.posts = res['data'][0].posts;
+      }
     });
   }
 

@@ -27,7 +27,6 @@
     "@angular/http": "^4.4.0-RC.0",
     "@angular/platform-browser": "^4.4.0-RC.0",
     "@angular/platform-browser-dynamic": "^4.4.0-RC.0",
-    "@angular/platform-server": "^4.4.0-RC.0",
     "@angular/router": "^4.4.0-RC.0",
     "amazon-product-api": "^0.4.4",
     "body-parser": "^1.17.2",
@@ -54,6 +53,7 @@
   "devDependencies": {
     "@angular/cli": "^1.4.1",
     "@angular/compiler-cli": "^4.4.0-RC.0",
+    "@angular/platform-server": "^4.4.0-RC.0",
     "@types/jasmine": "2.5.38",
     "@types/jquery": "^3.2.12",
     "@types/node": "^6.0.85",

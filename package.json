@@ -9,7 +9,7 @@
     "start": "node dist/server/server.js",
     "predev": "tsc -p server",
     "preserve": "tsc -p server",
-    "only": "concurrently \"tsc -w -p server\" \"nodemon --inspect dist/server/server.js --ignore server/processing/\"",
+    "only": "concurrently \"tsc -w -p server\" \"nodemon --inspect dist/server/server.js\"",
     "dev": "concurrently \"ng serve -pc proxy.conf.json --open\" \"tsc -w -p server\" \"nodemon dist/server/server.js --ignore server/\"",
     "prod": "concurrently \"ng build -aot -prod && tsc -p server && node dist/server/server.js\"",
     "lint": "tslint \"src/**/*.ts\" --project src/tsconfig.json --type-check && tslint \"e2e/**/*.ts\" --project e2e/tsconfig.json --type-check",
@@ -52,7 +52,7 @@
     "zone.js": "^0.7.2"
   },
   "devDependencies": {
-    "@angular/cli": "^1.3.0",
+    "@angular/cli": "^1.4.1",
     "@angular/compiler-cli": "^4.3.4",
     "@types/jasmine": "2.5.38",
     "@types/jquery": "^3.2.12",

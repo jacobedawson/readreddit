@@ -1,25 +1,31 @@
 // const _ = require('ramda');
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
-import * as cors from 'cors';
-import * as snow from 'snoowrap';
-import * as fs from 'fs';
-import * as getURLs from 'get-urls';
-import * as jsonfile from 'jsonfile';
-import * as amazon from 'amazon-product-api';
-import router from './api';
-import * as mongoose from 'mongoose';
-import * as cron from 'node-cron'; // cron.schedule ...
-import * as week from 'current-week-number';
-import * as path from 'path';
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const snow = require('snoowrap');
+const fs = require('fs');
+const getURLs = require('get-urls');
+const amazon = require('amazon-product-api');
+const router = require('./server/api');
+const mongoose = require('mongoose');
+const cron = require('node-cron');
+const week = require('current-week-number');
+const path = require('path');
 mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://localhost/reddreader');
-mongoose.connect(
-    'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
+mongoose.connect('mongodb://localhost/reddreader');
+// mongoose.connect(
+//     'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
 
+const List = require('./server/models/list');
+const Catalog = require('./server/models/catalog');
 
-import List from './models/list';
-import Catalog from './models/catalog';
+/* Angular Universal Imports */
+// import 'zone.js/dist/zone-node';
+// import 'reflect-metadata';
+// import * as ngUniversal from '@nguniversal/express-engine';
+// import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
+// const AppServerModuleNgFactory = require('../dist-server/public/main.bundle');
+
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -28,8 +34,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors());
 // app.get('/', (req, res) => res.send('Hello world'));
-app.use('/api', router);
-app.use('/', express.static(path.join(__dirname, '../public')));
+app.use('/server/api', router);
+app.use('/', express.static(path.join(__dirname, './dist/public')));
 
 
 // TODO remove hardcoded credentials, use ENV VARs
@@ -337,7 +343,7 @@ function linkCleaner(link) {
     If the item is found, we create an object with the item attributes and then
     return it, to be pushed into the post object's item array.
 */
-function amazonItemLookup(itemID: string): Promise<any> {
+function amazonItemLookup(itemID) {
     return z.itemLookup({
         idType: 'ASIN',
         itemId: `${itemID}`,
@@ -362,7 +368,7 @@ function amazonItemLookup(itemID: string): Promise<any> {
 }
 
 app.get('/*', function(req, res) {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, './dist/public/index.html'));
   });
 
 app.listen(3000, () => console.log('Listening on 3000'));

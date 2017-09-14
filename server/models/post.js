@@ -1,7 +1,6 @@
-import * as mongoose from 'mongoose';
-import { LinkSchema } from './link';
-
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const LinkSchema = require('./link');
 
 const PostSchema = new Schema({
     index: Number,
@@ -21,4 +20,4 @@ PostSchema.index({
     unique: true
 });
 
-export { PostSchema };
+module.exports = PostSchema;

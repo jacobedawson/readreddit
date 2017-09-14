@@ -1,15 +1,13 @@
 {
     "extends": "../tsconfig.json",
     "compilerOptions": {
+      "allowJs": true,
       "baseUrl": "./",
       "declaration": false,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "lib": ["es6", "dom"],
-      "mapRoot": "./",
-      "module": "es2015",
-      "outDir": "../dist/out-tsc",
-      "target": "es5"
+      "module": "commonjs",
+      "outDir": "../dist/out-tsc"
     },
     "excludes" : [
       "test.ts",

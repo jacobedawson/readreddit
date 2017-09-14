@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import { PostSchema } from './post';
+const mongoose = require('mongoose');
+const PostSchema = require('./post');
 
 const Schema = mongoose.Schema;
 
@@ -16,4 +16,4 @@ ListSchema.index({subreddit: 1, week: 1, year: 1}, {unique: true});
 
 const List = mongoose.model('List', ListSchema);
 
-export default List;
+module.exports = List;

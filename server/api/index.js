@@ -1,12 +1,10 @@
-import * as express from 'express';
-import * as currentWeek from 'current-week-number';
-import * as MailChimp from 'mailchimp-api-v3';
-import * as EmailValidator from 'email-validator';
-import List from '../models/list';
-import Catalog from '../models/catalog';
-
-
+const express = require('express');
 const router = express.Router();
+const currentWeek = require('current-week-number');
+const MailChimp = require('mailchimp-api-v3');
+const EmailValidator = require('email-validator');
+const List = require('../models/list');
+const Catalog = require('../models/catalog');
 const Mail = new MailChimp('d14170fd61cb4473a78d86ece46e91c6-us15');
 
 router.get('/', (req, res) => {
@@ -102,4 +100,4 @@ function verifyEmail(email) {
     }
 }
 
-export default router;
+module.exports = router;

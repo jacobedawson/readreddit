@@ -1,5 +1,4 @@
-import * as mongoose from 'mongoose';
-
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Dates = new Schema({
@@ -14,4 +13,4 @@ const CatalogSchema = new Schema({
 
 const Catalog = mongoose.model('Catalog', CatalogSchema);
 
-export default Catalog;
+module.exports = Catalog;

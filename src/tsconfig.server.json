@@ -1,0 +1,22 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+      "baseUrl": "./",
+      "declaration": false,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "lib": ["es6", "dom"],
+      "mapRoot": "./",
+      "module": "es2015",
+      "outDir": "../dist/out-tsc",
+      "target": "es5"
+    },
+    "excludes" : [
+      "test.ts",
+      "**/*.spec.ts"
+    ],
+    "angularCompilerOptions": {
+      "entryModule": "app/app.server.module#AppServerModule"
+    }
+  }
+  

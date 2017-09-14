@@ -1,4 +1,5 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "",
     "declaration": false,
@@ -6,13 +7,12 @@
     "experimentalDecorators": true,
     "lib": ["es6", "dom"],
     "mapRoot": "./",
-    "module": "es6",
-    "moduleResolution": "node",
+    "module": "es2015",
     "outDir": "../dist/out-tsc",
-    "sourceMap": true,
-    "target": "es5",
-    "typeRoots": [
-      "../node_modules/@types"
-    ]
-  }
+    "target": "es5"
+  },
+  "excludes" : [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
 }

@@ -12,31 +12,50 @@ const cron = require('node-cron');
 const week = require('current-week-number');
 const path = require('path');
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/reddreader');
-// mongoose.connect(
-//     'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
+// mongoose.connect('mongodb://localhost/reddreader');
+mongoose.connect(
+    'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
 
 const List = require('./server/models/list');
 const Catalog = require('./server/models/catalog');
 
-/* Angular Universal Imports */
-// import 'zone.js/dist/zone-node';
-// import 'reflect-metadata';
-// import * as ngUniversal from '@nguniversal/express-engine';
-// import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
-// const AppServerModuleNgFactory = require('../dist-server/public/main.bundle');
+require('zone.js/dist/zone-node');
+require('reflect-metadata');
+const ngUniversal = require('@nguniversal/express-engine');
+const { provideModuleMap } = require('@nguniversal/module-map-ngfactory-loader');
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('./dist-server/public/main.bundle');
 
+function angularRouter(req, res) {
+    res.render('index', { req, res });
+}
 
 const app = express();
+
+app.engine('html', ngUniversal.ngExpressEngine({
+    bootstrap: AppServerModuleNgFactory,
+    providers: [
+        provideModuleMap(LAZY_MODULE_MAP)
+    ]
+}));
+app.set('view engine', 'html');
+app.set('views', 'dist/public');
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
 app.use(cors());
-// app.get('/', (req, res) => res.send('Hello world'));
-app.use('/server/api', router);
-app.use('/', express.static(path.join(__dirname, './dist/public')));
 
+app.use('/server/api', router);
+
+app.get('/', angularRouter);
+
+app.use(express.static(`${__dirname}/dist/public`));
+// app.use('/', express.static(path.join(__dirname, './dist/public')));
+
+app.get('*', angularRouter);
+
+app.listen(3000, () => console.log('Listening on 3000'));
 
 // TODO remove hardcoded credentials, use ENV VARs
 const z = amazon.createClient({
@@ -367,8 +386,8 @@ function amazonItemLookup(itemID) {
     });
 }
 
-app.get('/*', function(req, res) {
-    res.sendFile(path.join(__dirname, './dist/public/index.html'));
-  });
+// app.get('/*', function(req, res) {
+//     res.sendFile(path.join(__dirname, './dist/public/index.html'));
+//   });
 
-app.listen(3000, () => console.log('Listening on 3000'));
+

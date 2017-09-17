@@ -12,9 +12,9 @@ const cron = require('node-cron');
 const week = require('current-week-number');
 const path = require('path');
 mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://localhost/reddreader');
-mongoose.connect(
-    'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
+mongoose.connect('mongodb://localhost/reddreader');
+// mongoose.connect(
+//     'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
 
 const List = require('./server/models/list');
 const Catalog = require('./server/models/catalog');
@@ -46,7 +46,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/server/api', router);
+app.use('/api', router);
 
 app.get('/', angularRouter);
 
@@ -113,61 +113,61 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
 };
 
 
-cron.schedule('0 30 22 * * 0',
-    () => {
-        console.log('Running Cron Job #1');
-        getNewPosts([
-            'askscience',
-            'atheism',
-            'bookClub',
-            'bookhaul',
-            'BookLists',
-            'booksuggestions',
-            'comics'
-        ]);
-    }, true
-);
-cron.schedule('0 0 23 * * 0',
-    () => {
-        console.log('Running Cron Job #2');
-        getNewPosts([
-            'entrepreneur',
-            'explainlikeimfive',
-            'Fantasy',
-            'GetMotivated',
-            'history',
-            'HorrorLit',
-            'personalfinance'
-        ]);
-    }, true
-);
-cron.schedule('0 30 23 * * 0',
-    () => {
-        console.log('Running Cron Job #3');
-        getNewPosts([
-            'philosophy',
-            'printSF',
-            'programming',
-            'science',
-            'seduction'
-        ]);
-    }, true
-);
-cron.schedule('0 59 23 * * 0',
-    () => {
-        console.log('Running Cron Job #4');
-        getNewPosts([
-            'startups',
-            'suggestmeabook',
-            'webdev',
-            'whatsthatbook',
-            'YALit'
-        ]);
-    }, true
-);
+// cron.schedule('0 30 22 * * 0',
+//     () => {
+//         console.log('Running Cron Job #1');
+//         getNewPosts([
+//             'askscience',
+//             'atheism',
+//             'bookClub',
+//             'bookhaul',
+//             'BookLists',
+//             'booksuggestions',
+//             'comics'
+//         ]);
+//     }, true
+// );
+// cron.schedule('0 0 23 * * 0',
+//     () => {
+//         console.log('Running Cron Job #2');
+//         getNewPosts([
+//             'entrepreneur',
+//             'explainlikeimfive',
+//             'Fantasy',
+//             'GetMotivated',
+//             'history',
+//             'HorrorLit',
+//             'personalfinance'
+//         ]);
+//     }, true
+// );
+// cron.schedule('0 30 23 * * 0',
+//     () => {
+//         console.log('Running Cron Job #3');
+//         getNewPosts([
+//             'philosophy',
+//             'printSF',
+//             'programming',
+//             'science',
+//             'seduction'
+//         ]);
+//     }, true
+// );
+// cron.schedule('0 59 23 * * 0',
+//     () => {
+//         console.log('Running Cron Job #4');
+//         getNewPosts([
+//             'startups',
+//             'suggestmeabook',
+//             'webdev',
+//             'whatsthatbook',
+//             'YALit'
+//         ]);
+//     }, true
+// );
 
 
-// getNewPosts([
+getNewPosts([
 // 'askscience',
 // 'atheism',
 // 'bookClub',
@@ -192,14 +192,14 @@ cron.schedule('0 59 23 * * 0',
 // 'webdev',
 // 'whatsthatbook',
 // 'YALit'
-// ]);
+]);
 function getNewPosts(listOfSubs) {
     const w = week();
     const y = (new Date()).getFullYear();
     listOfSubs.map(sub => {
         console.log(sub);
         fetchSubreddit(sub, 100, 'week').then(posts => {
-            const processedPosts = removeEmptyLinks(posts);
+            const processedPosts = posts.length > 0 ? removeEmptyLinks(posts) : posts;
             console.log(processedPosts);
             if (processedPosts.length === 0) {
                 console.log('No content, skipping this subreddit');

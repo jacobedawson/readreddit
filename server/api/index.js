@@ -21,7 +21,6 @@ router.get('/list', (req, res) => {
     const year = req.query.year ? req.query.year : 0;
     const subreddit = req.query.subreddit ? req.query.subreddit : false;
     const query = subreddit ? { week, year, subreddit } : {};
-    console.log(query);
     List.find(query, (err, list) => {
         if (err) {
             res.json({

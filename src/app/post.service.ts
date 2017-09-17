@@ -12,8 +12,6 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-
-
   // This should run once on load to fill the select menus
   getCatalog() {
     return this.http.get(`${this.URL}/api/catalog`);

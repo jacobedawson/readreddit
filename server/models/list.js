@@ -13,6 +13,12 @@ const ListSchema = new Schema({
 
 // Create a compound index on subreddit, year & week to prevent dupes
 ListSchema.index({subreddit: 1, week: 1, year: 1}, {unique: true});
+ListSchema.index({ subreddit : 1 }, {
+    collation: {
+        locale: 'en',
+        strength: 2
+    }
+});
 
 const List = mongoose.model('List', ListSchema);
 

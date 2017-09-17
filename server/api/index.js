@@ -21,7 +21,7 @@ router.get('/list', (req, res) => {
     const year = req.query.year ? req.query.year : 0;
     const subreddit = req.query.subreddit ? req.query.subreddit : false;
     const query = subreddit ? { week, year, subreddit } : {};
-    List.find(query, (err, list) => {
+    List.find(query).sort({subreddit: 1}).exec((err, list) => {
         if (err) {
             res.json({
                 info: 'Error while retrieving list',
@@ -42,7 +42,7 @@ router.get('/list', (req, res) => {
 });
 
 router.get('/catalog', (req, res) => {
-    Catalog.find({}, (err, catalog) => {
+    Catalog.find({}).sort({subreddit: 1}).exec((err, catalog) => {
         if (err) {
             console.log(err);
             res.json({

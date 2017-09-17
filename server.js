@@ -173,7 +173,7 @@ getNewPosts([
 // 'bookClub',
 // 'bookhaul',
 // 'BookLists',
-// 'booksuggestions',
+// 'booksuggestions'
 // 'comics',
 // 'entrepreneur',
 // 'explainlikeimfive',
@@ -199,7 +199,7 @@ function getNewPosts(listOfSubs) {
     listOfSubs.map(sub => {
         console.log(sub);
         fetchSubreddit(sub, 100, 'week').then(posts => {
-            const processedPosts = posts.length > 0 ? removeEmptyLinks(posts) : posts;
+            const processedPosts = posts && posts.length > 0 ? removeEmptyLinks(posts) : [];
             console.log(processedPosts);
             if (processedPosts.length === 0) {
                 console.log('No content, skipping this subreddit');

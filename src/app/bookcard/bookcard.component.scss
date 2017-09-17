@@ -5,6 +5,7 @@
     background: $rr-blue;
     border-left: 3px solid transparent;
     border-top: 1px solid rgb(14, 36, 57);
+    border-radius: 0;
     transition: 0.3s all ease-in-out;
     padding: 24px;
     &:hover {
@@ -17,10 +18,13 @@
     }
     @media (max-width: 768px) {
         padding: 10px;
+        margin-bottom: 36px;
+        border-top: 1px solid $rr-red;
     }
     @media (max-width: 576px) {
         padding: 0;
         border: none;
+        border-top: 1px solid $rr-red;
         &:hover {
             border: none;
             transform: none;

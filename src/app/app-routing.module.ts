@@ -13,10 +13,6 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'results',
-    component: FilteredResultsComponent
-  },
-  {
     path: 'newsletter',
     component: NewsletterPageComponent
   },

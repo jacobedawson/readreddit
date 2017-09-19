@@ -53,6 +53,10 @@ app.get('/', angularRouter);
 app.use(express.static(`${__dirname}/dist/public`));
 // app.use('/', express.static(path.join(__dirname, './dist/public')));
 
+app.get('/sitemap.xml', (req, res) => {
+    res.sendFile((`${__dirname}/dist/public/assets/sitemap.xml`));
+});
+
 app.get('*', angularRouter);
 
 app.listen(3000, () => console.log('Listening on 3000'));

@@ -1,14 +1,24 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
-const Dates = new Schema({
+const ListSchema = require('./list');
+/* 
+    This schema contains a list of ids
+    of results from the reddit scraping
+*/
+const CatalogSchema = new Schema({
     year: Number,
     week: Number,
+    results: [{
+        type: Schema.Types.ObjectId,
+        ref: 'List'
+    }]
 });
 
-const CatalogSchema = new Schema({
-    subreddit: String,
-    dates: [Dates]
+CatalogSchema.index({
+    year: 1,
+    week: 1
+}, {
+    unique: true
 });
 
 const Catalog = mongoose.model('Catalog', CatalogSchema);

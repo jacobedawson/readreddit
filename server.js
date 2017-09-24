@@ -201,15 +201,12 @@ function getNewPosts(listOfSubs) {
     const w = week();
     const y = (new Date()).getFullYear();
     listOfSubs.map(sub => {
-        console.log(sub);
         fetchSubreddit(sub, 100, 'week').then(posts => {
             const processedPosts = posts && posts.length > 0 ? removeEmptyLinks(posts) : [];
-            console.log(processedPosts);
             if (processedPosts.length === 0) {
                 console.log('No content, skipping this subreddit');
                 return;
             }
-            updateCatalog(sub, y, w);
             const compiledList = new List({
                 week: w,
                 year: y,
@@ -220,8 +217,10 @@ function getNewPosts(listOfSubs) {
             compiledList.save((err) => {
                 if (err) {
                     console.log(err);
+                } else {
+                    updateCatalog(sub, y, w);
+                    console.log('COMPLETE: 🔥');
                 }
-                console.log('COMPLETE: 🔥');
             });
         }).catch((e) => {
             console.log(e);

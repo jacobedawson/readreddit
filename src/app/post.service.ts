@@ -22,6 +22,10 @@ export class PostService {
     return this.http.get(`${this.URL}/api/list`);
   }
 
+  getHistory() {
+    return this.http.get(`${this.URL}/api/history`);
+  }
+
   // This get the info for a particular subreddit
   getSubredditPosts({sub, week, year}) {
     this.http.get(

@@ -5,6 +5,7 @@ const MailChimp = require('mailchimp-api-v3');
 const EmailValidator = require('email-validator');
 const List = require('../models/list');
 const Catalog = require('../models/catalog');
+const History = require('../models/history');
 const Mail = new MailChimp('d14170fd61cb4473a78d86ece46e91c6-us15');
 
 router.get('/', (req, res) => {
@@ -41,16 +42,13 @@ router.get('/list', (req, res) => {
     });
 });
 
-
-/* 
-    Get the catalog for a particular year & week, plus all 
-    of the results for that date range in a single call.
-*/
 router.get('/catalog', (req, res) => {
-    Catalog.find({
-        week: 39,
-        year: 2017
-    }).populate('results').exec((err, catalog) => {
+    const w = currentWeek();
+    const y = (new Date()).getFullYear();
+    const week = req.query.week ? req.query.week : null;
+    const year = req.query.year ? req.query.year : null;
+    const query = week ? { week, year } : { week: w, year: y };
+    Catalog.find(query).populate('results').exec((err, catalog) => {
         if (err) {
             console.log(err);
             res.json({
@@ -71,11 +69,31 @@ router.get('/catalog', (req, res) => {
     });
 });
 
+router.get('/history', (req, res) => {
+    History.find({}).exec((err, history) => {
+        if (err) {
+            console.log(err);
+            res.json({
+                info: "Error while retrieving history",
+                error: err
+            })
+        }
+        if (history) {
+            res.json({
+                info: "Found History",
+                data: history
+            });
+        } else {
+            res.json({
+                info: "No History found..."
+            });
+        }
+    });
+});
+
 router.post('/newsletter', (req, res) => {
     console.log('Received newsletter post request');
-    // Add subscriber to Mailchimp list
     if (!EmailValidator.validate(req.body.email)) {
-        console.log('That email is invalid..');
         res.status(500).send({
             error: 'That email is invalid..'
         });
@@ -84,7 +102,6 @@ router.post('/newsletter', (req, res) => {
             email_address: req.body.email,
             status: 'subscribed'
         }).then((err, success) => {
-            console.log('Successfully added user to newsletter');
             res.status(200).send({
                 info: 'success'
             })
@@ -97,14 +114,5 @@ router.post('/newsletter', (req, res) => {
         });
     }
 });
-
-function verifyEmail(email) {
-    // run check on email
-    if (email) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
 module.exports = router;

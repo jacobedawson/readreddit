@@ -33,16 +33,31 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.postService.getCatalog().subscribe(res => {
       if (res['data']) {
-        this.processData(res['data'][0]);
+        this.processPostData(res['data'][0]);
+      }
+    });
+    // Get all history
+    this.postService.getHistory().subscribe(res => {
+      if (res['data']) {
+        this.processHistoryData(res['data']);
       }
     });
   }
 
-  processData(data) {
-    this.dates.push({ week: data.week, year: data.year });
+  processPostData(data) {
+    // this.dates.push({ week: data.week, year: data.year });
     this.subreddits = data.results.map(res => res.subreddit);
     this.posts = data.results[0].posts;
     this.catalog = data.results;
+  }
+
+  processHistoryData(data) {
+    data.forEach(dateObject => {
+      this.dates.push({
+        week: dateObject.week,
+        year: dateObject.year
+      });
+    });
   }
 
   onSubredditSelect(sub) {

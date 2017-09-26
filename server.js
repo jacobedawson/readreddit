@@ -19,6 +19,7 @@ mongoose.connect('mongodb://localhost/reddreader-alt');
 
 const List = require('./server/models/list');
 const Catalog = require('./server/models/catalog');
+const History = require('./server/models/history');
 
 require('zone.js/dist/zone-node');
 require('reflect-metadata');
@@ -184,30 +185,30 @@ cron.schedule('0 59 23 * * 0',
 */
 
 // getNewPosts([
-//   'askscience',
-//   'atheism',
-//   'bookClub',
-//   'bookhaul',
-//   'BookLists',
-//   'booksuggestions',
-//   'comics',
-//   'entrepreneur',
-//   'explainlikeimfive',
-//   'Fantasy',
-//   'GetMotivated',
-//   'history',
-//   'HorrorLit',
-//   'personalfinance',
-//   'philosophy',
-//   'printSF',
-//   'programming',
-//   'science',
-//   'seduction',
-//   'startups',
-//   'suggestmeabook',
-//   'webdev',
-//   'whatsthatbook',
-//   'YALit'
+  //   'askscience',
+    // 'atheism',
+    // 'bookClub',
+    // 'bookhaul',
+    // 'BookLists',
+  //   'booksuggestions',
+    // 'comics',
+  //   'entrepreneur',
+    // 'explainlikeimfive',
+  //   'Fantasy',
+    // 'GetMotivated',
+    // 'history',
+  // 'HorrorLit',
+  // 'personalfinance',
+  // 'philosophy',
+  // 'printSF',
+  // 'programming',
+  // 'science',
+  // 'seduction',
+  // 'startups',
+  // 'suggestmeabook',
+  // 'webdev',
+  // 'whatsthatbook',
+  // 'YALit'
 // ]);
 
 function getNewPosts(listOfSubs) {
@@ -232,6 +233,7 @@ function getNewPosts(listOfSubs) {
           console.log(err);
         } else {
           updateCatalog(list._id, y, w);
+          updateHistory(y, w);
           console.log('COMPLETE: 🔥');
         }
       });
@@ -243,11 +245,32 @@ function getNewPosts(listOfSubs) {
 }
 
 function updateCatalog(id, year, week) {
-  Catalog.findOneAndUpdate({ year, week }, 
-    { $push: { "results": id } }, 
-    { upsert: true }, (err, res) => {
-    if (err) console.log(err); 
+  Catalog.findOneAndUpdate({
+    year,
+    week
+  }, {
+    $push: {
+      "results": id
+    }
+  }, {
+    upsert: true
+  }, (err, res) => {
+    if (err) console.log(err);
   });
+}
+
+function updateHistory(year, week) {
+  const updatedHistory = new History({
+    year: year,
+    week: week
+  });
+  updatedHistory.save((err, confirmation) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('New History Saved');
+    }
+  })
 }
 
 function removeEmptyLinks(posts) {

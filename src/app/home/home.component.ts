@@ -9,12 +9,19 @@ import { PostService } from './../post.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
   subscription: Subscription;
-  posts: any;
+  posts = [];
+  catalog = [];
+  subreddits = [];
+  dates = [];
+
   constructor(private meta: Meta, private title: Title, private postService: PostService) {
+    // Subscribe to the post service
     this.subscription = this.postService.updatePosts().subscribe(res => {
       this.posts = res['data'][0].posts;
     });
+
     title.setTitle('Reddreader - Top Reddit Book Recommendations & Subreddit Book Links');
     meta.addTag({
       name: 'description',
@@ -24,9 +31,24 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.postService.getPosts().subscribe(res => {
+    this.postService.getCatalog().subscribe(res => {
       if (res['data']) {
-        this.posts = res['data'][0].posts;
+        this.processData(res['data'][0]);
+      }
+    });
+  }
+
+  processData(data) {
+    this.dates.push({ week: data.week, year: data.year });
+    this.subreddits = data.results.map(res => res.subreddit);
+    this.posts = data.results[0].posts;
+    this.catalog = data.results;
+  }
+
+  onSubredditSelect(sub) {
+    this.catalog.forEach(arr => {
+      if (arr.subreddit === sub) {
+        this.posts = arr.posts;
       }
     });
   }

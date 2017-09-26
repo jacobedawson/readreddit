@@ -1,13 +1,13 @@
 <div class="row p-2 justify-content-center">
   <form class="form-inline justify-content-between">
+    <select (change)="onDateSelection($event)" class="custom-select">
+          <option *ngFor="let date of dates" value="{{date.week}}{{date.year}}">
+              Week {{date.week}} - {{date.year}}
+          </option>
+        </select>
     <select (change)="onSubredditSelection($event)" class="custom-select" id="inlineFormCustomSelect">
-      <option *ngFor="let entry of catalog" value="{{entry.subreddit}}">
-        {{entry.subreddit}}
-      </option>
-    </select>
-    <select *ngIf="activeSub" (change)="onDateSelection($event)" class="custom-select">
-      <option *ngFor="let date of activeSub.dates" value="{{date.week}}{{date.year}}">
-          Week {{date.week}} - {{date.year}}
+      <option *ngFor="let sub of subreddits" value="{{sub}}">
+        {{sub}}
       </option>
     </select>
     <button type="submit" (click)="onFilterSearch()" class="rr-button primary">Submit</button>

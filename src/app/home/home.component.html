@@ -1,6 +1,9 @@
 <div class="container content-container">
   <app-introtext></app-introtext>
-  <app-filter-bar></app-filter-bar>
+  <app-filter-bar 
+  [subreddits]="subreddits" 
+  [dates]="dates" 
+  (subredditSelect)="onSubredditSelect($event)"></app-filter-bar>
   <app-filtered-results [posts]="posts"></app-filtered-results>
 </div>
 

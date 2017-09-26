@@ -41,8 +41,16 @@ router.get('/list', (req, res) => {
     });
 });
 
+
+/* 
+    Get the catalog for a particular year & week, plus all 
+    of the results for that date range in a single call.
+*/
 router.get('/catalog', (req, res) => {
-    Catalog.find({}).sort({subreddit: 1}).exec((err, catalog) => {
+    Catalog.find({
+        week: 39,
+        year: 2017
+    }).populate('results').exec((err, catalog) => {
         if (err) {
             console.log(err);
             res.json({

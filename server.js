@@ -183,32 +183,32 @@ cron.schedule('0 59 23 * * 0',
 );
 */
 
-getNewPosts([
-  // 'askscience',
-  // 'atheism',
-  // 'bookClub',
+// getNewPosts([
+//   'askscience',
+//   'atheism',
+//   'bookClub',
 //   'bookhaul',
-//   'BookLists'
-//   'booksuggestions'
-  // 'comics',
+//   'BookLists',
+//   'booksuggestions',
+//   'comics',
 //   'entrepreneur',
 //   'explainlikeimfive',
-  'Fantasy',
-  // 'GetMotivated',
-  // 'history',
-  // 'HorrorLit',
-  // 'personalfinance',
-  // 'philosophy',
-  // 'printSF',
-  // 'programming',
-  // 'science',
-  // 'seduction',
-  // 'startups',
-  // 'suggestmeabook',
-  // 'webdev',
-  // 'whatsthatbook',
-  // 'YALit'
-]);
+//   'Fantasy',
+//   'GetMotivated',
+//   'history',
+//   'HorrorLit',
+//   'personalfinance',
+//   'philosophy',
+//   'printSF',
+//   'programming',
+//   'science',
+//   'seduction',
+//   'startups',
+//   'suggestmeabook',
+//   'webdev',
+//   'whatsthatbook',
+//   'YALit'
+// ]);
 
 function getNewPosts(listOfSubs) {
   const w = week();

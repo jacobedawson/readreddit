@@ -1,5 +1,5 @@
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PostService } from './../post.service';
-import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-filter-bar',
@@ -11,36 +11,16 @@ export class FilterBarComponent implements OnInit {
   selectedSubreddit = false;
   selectedDate;
   activeSub;
-
+  @Input() dates;
+  @Input() subreddits;
+  @Output()
+  subredditSelect = new EventEmitter<String>(); // creating an output event
   constructor(private postService: PostService) { }
 
-  ngOnInit() {
-    this.postService.getCatalog().subscribe(res => {
-      if (res['data']) {
-        this.catalog = res['data'];
-        this.catalog.map((x) => x.dates.reverse());
-        this.activeSub = this.catalog[0];
-        this.selectedSubreddit = this.catalog[0].subreddit;
-        this.selectedDate = this.catalog[0].dates[0].week + '2017';
-      }
-    });
-  }
+  ngOnInit() {}
 
-  /* 
-    TODO: The functionality on this page is becoming very messy
-    and hard to follow. There are too many hard-coded functions & data.
-  */
   onSubredditSelection(e) {
-    this.selectedSubreddit = e.target.value;
-    this.activeSub = this.catalog.filter(cat => {
-      return cat.subreddit === this.selectedSubreddit;
-    })[0] || [];
-    this.selectedDate = this.activeSub.dates[0].week + '2017';
-    this.postService.getSubredditPosts({
-      sub: this.selectedSubreddit,
-      week: this.selectedDate.slice(0, 2),
-      year: 2017
-    });
+    this.subredditSelect.emit(e.target.value);
   }
 
   onDateSelection(e) {

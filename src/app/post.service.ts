@@ -26,10 +26,10 @@ export class PostService {
     return this.http.get(`${this.URL}/api/history`);
   }
 
-  // This get the info for a particular subreddit
-  getSubredditPosts({sub, week, year}) {
+  // This get the info for a particular date range
+  getSubredditPosts({week, year}) {
     this.http.get(
-      `${this.URL}/api/list?week=${week}&year=${year}&subreddit=${sub}`
+      `${this.URL}/api/catalog?week=${week}&year=${year}`
     ).subscribe(res => {
       this.subject.next(res);
     });

@@ -6,7 +6,7 @@
           </option>
         </select>
     <select (change)="onSubredditSelection($event)" class="custom-select" id="inlineFormCustomSelect">
-      <option *ngFor="let sub of subreddits" value="{{sub}}">
+      <option *ngFor="let sub of subreddits; let i = index" [selected]="i == 0" [ngValue]="sub">
         {{sub}}
       </option>
     </select>

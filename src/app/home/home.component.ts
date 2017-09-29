@@ -19,7 +19,9 @@ export class HomeComponent implements OnInit {
   constructor(private meta: Meta, private title: Title, private postService: PostService) {
     // Subscribe to the post service
     this.subscription = this.postService.updatePosts().subscribe(res => {
-      this.posts = res['data'][0].posts;
+      if (res['data']) {
+        this.processPostData(res['data'][0]);
+      }
     });
 
     title.setTitle('Reddreader - Top Reddit Book Recommendations & Subreddit Book Links');
@@ -45,7 +47,6 @@ export class HomeComponent implements OnInit {
   }
 
   processPostData(data) {
-    // this.dates.push({ week: data.week, year: data.year });
     this.subreddits = data.results.map(res => res.subreddit);
     this.posts = data.results[0].posts;
     this.catalog = data.results;

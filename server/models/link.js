@@ -11,6 +11,8 @@ const LinkSchema = new Schema({
 });
 
 // Create a compound index to prevent dupes
-LinkSchema.index({ISBN: 1, title: 1, author: 1}, {unique: true});
+// LinkSchema.index({ISBN: 1, title: 1, author: 1}, {unique: true});
+// Removed this index because the same book may appear in 
+// multiple weeks 
 
 module.exports = LinkSchema;

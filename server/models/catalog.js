@@ -10,7 +10,9 @@ const CatalogSchema = new Schema({
     week: Number,
     results: [{
         type: Schema.Types.ObjectId,
-        ref: 'List'
+        ref: 'List',
+        index: true,
+        unique: true
     }]
 });
 
@@ -20,6 +22,7 @@ CatalogSchema.index({
 }, {
     unique: true
 });
+
 
 const Catalog = mongoose.model('Catalog', CatalogSchema);
 

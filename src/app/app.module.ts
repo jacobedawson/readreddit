@@ -4,10 +4,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 /* Services */
 import { NewsletterService } from './newsletter.service';
 import { PostService } from './post.service';
+import { ScrollService } from './scroll.service';
 
 /* Components */
 import { AppComponent } from './app.component';
@@ -46,11 +48,12 @@ import { FaqComponent } from './faq/faq.component';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'reddreader-ssr' }),
+    ScrollToModule.forRoot(),
     FormsModule,
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [PostService, NewsletterService],
+  providers: [PostService, NewsletterService, ScrollService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

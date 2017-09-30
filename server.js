@@ -20,6 +20,7 @@ mongoose.connect('mongodb://localhost/reddreader-alt');
 const List = require('./server/models/list');
 const Catalog = require('./server/models/catalog');
 const History = require('./server/models/history');
+const Post = require('./server/models/post');
 
 require('zone.js/dist/zone-node');
 require('reflect-metadata');
@@ -106,7 +107,7 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
         time
       })
       .then()
-      .map((post, index) => { // map over each post, return an array of processed posts
+      .map((post, index) => {
         return {
           index,
           title: post.title,
@@ -184,19 +185,19 @@ cron.schedule('0 59 23 * * 0',
 );
 */
 
-// getNewPosts([
-  //   'askscience',
-    // 'atheism',
-    // 'bookClub',
-    // 'bookhaul',
-    // 'BookLists',
-  //   'booksuggestions',
-    // 'comics',
-  //   'entrepreneur',
-    // 'explainlikeimfive',
-  //   'Fantasy',
-    // 'GetMotivated',
-    // 'history',
+getNewPosts([
+  // 'askscience',
+  // 'atheism',
+  // 'bookClub',
+  // 'bookhaul',
+  // 'BookLists',
+  // 'booksuggestions',
+  // 'comics',
+  // 'entrepreneur',
+  // 'explainlikeimfive',
+  'Fantasy',
+  // 'GetMotivated',
+  // 'history',
   // 'HorrorLit',
   // 'personalfinance',
   // 'philosophy',
@@ -209,34 +210,52 @@ cron.schedule('0 59 23 * * 0',
   // 'webdev',
   // 'whatsthatbook',
   // 'YALit'
-// ]);
+]);
 
 function getNewPosts(listOfSubs) {
   const w = week();
   const y = (new Date()).getFullYear();
   listOfSubs.map(sub => {
-    fetchSubreddit(sub, 100, 'week').then(posts => {
+    fetchSubreddit(sub, 100, 'day').then(posts => {
       const processedPosts = posts && posts.length > 0 ? removeEmptyLinks(posts) : [];
       if (processedPosts.length === 0) {
         console.log('No content, skipping this subreddit');
         return;
       }
-      const compiledList = new List({
-        week: w,
-        year: y,
-        subreddit: sub,
-        created: Date.now(),
-        posts: processedPosts
-      });
-      compiledList.save((err, list) => {
+      Post.insertMany(processedPosts, (err, docs) => {
         if (err) {
           console.log(err);
-        } else {
-          updateCatalog(list._id, y, w);
-          updateHistory(y, w);
-          console.log('COMPLETE: 🔥');
+        }
+        if (docs) {
+          console.log(docs);
+          console.log('added new posts');
+          // docs is an array of the posts
+          // each has a new id, which we can push to 
+          // the appropriate list
         }
       });
+      // List.findOneAndUpdate({
+      //   year: y,
+      //   week: w,
+      //   subreddit: sub
+      // },{
+      //   $addToSet: {
+      //     posts: {
+      //       $each: processedPosts
+      //     }
+      //   }
+      // }, {
+      //   upsert: true,
+      //   new: true
+      // }, (err, list) => {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     updateCatalog(list._id, y, w);
+      //     updateHistory(y, w);
+      //     console.log('COMPLETE: 🔥');
+      //   }
+      // });
     }).catch((e) => {
       console.log(e);
       console.log(`Error collecting ${sub}`);
@@ -249,7 +268,7 @@ function updateCatalog(id, year, week) {
     year,
     week
   }, {
-    $push: {
+    $addToSet: {
       "results": id
     }
   }, {

@@ -13,9 +13,9 @@ const week = require('current-week-number');
 const path = require('path');
 mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://localhost/reddreader');
-mongoose.connect('mongodb://localhost/reddreader-alt');
-// mongoose.connect(
-//     'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
+// mongoose.connect('mongodb://localhost/reddreader-alt');
+mongoose.connect(
+    'mongodb://root:U16V$UsbHma#@reddreader-shard-00-00-ezqrg.mongodb.net:27017,reddreader-shard-00-01-ezqrg.mongodb.net:27017,reddreader-shard-00-02-ezqrg.mongodb.net:27017/reddreader?ssl=true&replicaSet=Reddreader-shard-0&authSource=admin');
 
 const List = require('./server/models/list');
 const Catalog = require('./server/models/catalog');

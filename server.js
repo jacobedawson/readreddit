@@ -130,8 +130,8 @@ const fetchSubreddit = async function (name = 'startups', limit = 10, time = 'mo
   }
 };
 
-/*
-cron.schedule('0 30 22 * * 0',
+
+cron.schedule('0 30 22 * * 0 - 6',
     () => {
         console.log('Running Cron Job #1');
         getNewPosts([
@@ -145,7 +145,7 @@ cron.schedule('0 30 22 * * 0',
         ]);
     }, true
 );
-cron.schedule('0 0 23 * * 0',
+cron.schedule('0 0 23 * * 0 - 6',
     () => {
         console.log('Running Cron Job #2');
         getNewPosts([
@@ -159,7 +159,7 @@ cron.schedule('0 0 23 * * 0',
         ]);
     }, true
 );
-cron.schedule('0 30 23 * * 0',
+cron.schedule('0 30 23 * * 0 - 6',
     () => {
         console.log('Running Cron Job #3');
         getNewPosts([
@@ -171,7 +171,7 @@ cron.schedule('0 30 23 * * 0',
         ]);
     }, true
 );
-cron.schedule('0 59 23 * * 0',
+cron.schedule('0 59 23 * * 0 - 6',
     () => {
         console.log('Running Cron Job #4');
         getNewPosts([
@@ -183,19 +183,19 @@ cron.schedule('0 59 23 * * 0',
         ]);
     }, true
 );
-*/
 
-getNewPosts([
+
+// getNewPosts([
   // 'askscience',
   // 'atheism',
   // 'bookClub',
   // 'bookhaul',
-  // 'BookLists',
+  // 'BookLists',#
   // 'booksuggestions',
   // 'comics',
   // 'entrepreneur',
   // 'explainlikeimfive',
-  'Fantasy',
+  // 'Fantasy',
   // 'GetMotivated',
   // 'history',
   // 'HorrorLit',
@@ -210,7 +210,7 @@ getNewPosts([
   // 'webdev',
   // 'whatsthatbook',
   // 'YALit'
-]);
+// ]);
 
 function getNewPosts(listOfSubs) {
   const w = week();
@@ -222,6 +222,7 @@ function getNewPosts(listOfSubs) {
         console.log('No content, skipping this subreddit');
         return;
       }
+      // Create multiple new post documents in one go
       Post.insertMany(processedPosts, (err, docs) => {
         if (err) {
           console.log(err);
@@ -232,30 +233,31 @@ function getNewPosts(listOfSubs) {
           // docs is an array of the posts
           // each has a new id, which we can push to 
           // the appropriate list
+          const postIDs = docs.map(doc => doc._id);
+          List.findOneAndUpdate({
+            year: y,
+            week: w,
+            subreddit: sub
+          }, {
+            $addToSet: {
+              posts: {
+                $each: postIDs
+              }
+            }
+          }, {
+            upsert: true,
+            new: true
+          }, (err, list) => {
+            if (err) {
+              console.log(err);
+            } else {
+              updateCatalog(list._id, y, w);
+              updateHistory(y, w);
+              console.log('COMPLETE: 🔥');
+            }
+          });
         }
       });
-      // List.findOneAndUpdate({
-      //   year: y,
-      //   week: w,
-      //   subreddit: sub
-      // },{
-      //   $addToSet: {
-      //     posts: {
-      //       $each: processedPosts
-      //     }
-      //   }
-      // }, {
-      //   upsert: true,
-      //   new: true
-      // }, (err, list) => {
-      //   if (err) {
-      //     console.log(err);
-      //   } else {
-      //     updateCatalog(list._id, y, w);
-      //     updateHistory(y, w);
-      //     console.log('COMPLETE: 🔥');
-      //   }
-      // });
     }).catch((e) => {
       console.log(e);
       console.log(`Error collecting ${sub}`);

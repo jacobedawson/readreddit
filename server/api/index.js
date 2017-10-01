@@ -6,6 +6,7 @@ const EmailValidator = require('email-validator');
 const List = require('../models/list');
 const Catalog = require('../models/catalog');
 const History = require('../models/history');
+const Post = require('../models/post');
 const Mail = new MailChimp('d14170fd61cb4473a78d86ece46e91c6-us15');
 
 router.get('/', (req, res) => {
@@ -48,7 +49,14 @@ router.get('/catalog', (req, res) => {
     const week = req.query.week ? req.query.week : null;
     const year = req.query.year ? req.query.year : null;
     const query = week ? { week, year } : { week: w, year: y };
-    Catalog.find(query).populate('results').exec((err, catalog) => {
+    Catalog.find(query).populate({
+        path: 'results',
+        model: 'List',
+        populate: {
+            path: 'posts',
+            model: 'Post'
+        }
+    }).exec((err, catalog) => {
         if (err) {
             console.log(err);
             res.json({

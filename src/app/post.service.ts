@@ -7,8 +7,8 @@ import { Subject } from 'rxjs/Subject';
 export class PostService {
 
   private subject = new Subject<any>();
-  URL = 'http://localhost:3000';
-  // URL = 'https://reddreader.com';
+  // URL = 'http://localhost:3000';
+  URL = 'https://reddreader.com';
 
   constructor(private http: HttpClient) {}
 

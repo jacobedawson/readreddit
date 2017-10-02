@@ -13,6 +13,10 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'year/:year/week/:week',
+    component: HomeComponent
+  },
+  {
     path: 'newsletter',
     component: NewsletterPageComponent
   },

@@ -26,7 +26,11 @@ export class PostService {
     return this.http.get(`${this.URL}/api/history`);
   }
 
-  // This get the info for a particular date range
+  getRange(range) {
+    return this.http.get(`${this.URL}/api/year/${range.year}/week/${range.week}`);
+  }
+
+  // This gets the info for a particular date range
   getSubredditPosts({week, year}) {
     this.http.get(
       `${this.URL}/api/catalog?week=${week}&year=${year}`

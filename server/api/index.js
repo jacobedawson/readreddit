@@ -43,6 +43,35 @@ router.get('/list', (req, res) => {
     });
 });
 
+router.get('/year/:y/week/:w', (req, res) => {
+    const {y: year, w: week} = req.params;
+    Catalog.find({year, week}).populate({
+        path: 'results',
+        model: 'List',
+        populate: {
+            path: 'posts',
+            model: 'Post'
+        }
+    }).exec((err, catalog) => {
+        if (err) {
+            console.log(err);
+            res.json({
+                info: 'Error while retrieving catalog',
+                error: err
+            });
+        }
+        if (catalog && catalog.length > 0) {
+            res.json({
+                info: 'Found Catalog',
+                data: catalog
+            });
+        } else {
+            console.log('not found');
+            res.status(404).send('Not Found');
+        } 
+    });
+});
+
 router.get('/catalog', (req, res) => {
     const week = req.query.week ? req.query.week : null;
     const year = req.query.year ? req.query.year : null;

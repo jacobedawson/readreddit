@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { PostService } from './../post.service';
 
 @Component({
@@ -9,21 +10,23 @@ import { PostService } from './../post.service';
 export class FilterBarComponent implements OnInit {
   catalog: any = [];
   selectedSubreddit = false;
-  selectedDate;
+  selectedDate = '';
   activeSub;
   @Input() dates;
   @Input() subreddits;
   @Output()
   subredditSelect = new EventEmitter<String>(); // creating an output event
-  constructor(private postService: PostService) { }
+  constructor(private postService: PostService, private route: ActivatedRoute) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    const x = this.route.snapshot.params;
+    if (x.year && x.week) {
+      console.log(x);
+      this.selectedDate = x.week + x.year;
+    }
+  }
 
   onSubredditSelection(e) {
-    /*
-      Child > Parent communication via event emitter
-      No need to contact API for this call
-    */
     this.subredditSelect.emit(e.target.value);
   }
 

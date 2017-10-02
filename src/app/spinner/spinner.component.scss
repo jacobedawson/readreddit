@@ -1,0 +1,44 @@
+@import '../sass/_colors.scss';
+
+.loading-screen {
+    background: $rr-blue;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.load-wrapper {
+    float: left;
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.bar {
+    float: left;
+    width: 15px;
+    height: 6px;
+    border-radius: 2px;
+    background-color: #4b9cdb;
+}
+
+.loader {
+    .bar {
+        animation: barAnimation 2s cubic-bezier(.17, .37, .43, .67) infinite;
+    }
+}
+
+@keyframes barAnimation {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(80px, 0);
+        background-color: #f5634a;
+        width: 25px;
+    }
+}

@@ -25,6 +25,7 @@ import { NewsletterFormComponent } from './newsletter-form/newsletter-form.compo
 import { NewsletterPageComponent } from './newsletter-page/newsletter-page.component';
 import { AboutComponent } from './about/about.component';
 import { FaqComponent } from './faq/faq.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { FaqComponent } from './faq/faq.component';
     NewsletterFormComponent,
     NewsletterPageComponent,
     AboutComponent,
-    FaqComponent
+    FaqComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'reddreader-ssr' }),

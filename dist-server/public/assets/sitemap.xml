@@ -6,18 +6,34 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
   <loc>https://reddreader.com/</loc>
-  <changefreq>daily</changefreq>
+  <changefreq>weekly</changefreq>
 </url>
 <url>
   <loc>https://reddreader.com/about</loc>
-  <changefreq>daily</changefreq>
+  <changefreq>monthly</changefreq>
 </url>
 <url>
   <loc>https://reddreader.com/newsletter</loc>
-  <changefreq>daily</changefreq>
+  <changefreq>monthly</changefreq>
 </url>
 <url>
   <loc>https://reddreader.com/faq</loc>
-  <changefreq>daily</changefreq>
+  <changefreq>monthly</changefreq>
+</url>
+<url>
+  <loc>https://reddreader.com/year/2017/week/39</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://reddreader.com/year/2017/week/38</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://reddreader.com/year/2017/week/37</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://reddreader.com/year/2017/week/36</loc>
+  <changefreq>yearly</changefreq>
 </url>
 </urlset>

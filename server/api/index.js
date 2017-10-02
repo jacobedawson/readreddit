@@ -44,11 +44,9 @@ router.get('/list', (req, res) => {
 });
 
 router.get('/catalog', (req, res) => {
-    const w = currentWeek();
-    const y = (new Date()).getFullYear();
     const week = req.query.week ? req.query.week : null;
     const year = req.query.year ? req.query.year : null;
-    const query = week ? { week, year } : { week: w, year: y };
+    const query = week ? { week, year } : {};
     Catalog.find(query).populate({
         path: 'results',
         model: 'List',

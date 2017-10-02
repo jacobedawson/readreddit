@@ -39,6 +39,7 @@
     "email-validator": "^1.1.1",
     "express": "^4.15.4",
     "get-urls": "^7.0.0",
+    "intl": "^1.2.5",
     "jquery": "^3.2.1",
     "jsonfile": "^3.0.1",
     "mailchimp-api-v3": "^1.7.0",

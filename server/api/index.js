@@ -76,9 +76,14 @@ router.get('/catalog', (req, res) => {
     const week = req.query.week ? req.query.week : null;
     const year = req.query.year ? req.query.year : null;
     const query = week ? { week, year } : {};
-    Catalog.find(query).populate({
+    Catalog.find(query).sort({week: -1}).limit(1).populate({
         path: 'results',
         model: 'List',
+        options: {
+            sort: {
+                posts: 1
+            }
+        },
         populate: {
             path: 'posts',
             model: 'Post'
@@ -105,7 +110,7 @@ router.get('/catalog', (req, res) => {
 });
 
 router.get('/history', (req, res) => {
-    History.find({}).exec((err, history) => {
+    History.find({}).sort({week: -1}).exec((err, history) => {
         if (err) {
             console.log(err);
             res.json({

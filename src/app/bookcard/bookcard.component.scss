@@ -1,4 +1,12 @@
 @import '../sass/_colors.scss';
+@import '../sass/_mixins.scss';
+
+.card-block {
+    flex-direction: row;
+    @media (md) {
+        flex-direction: column;
+    }
+}
 
 .book-card {
     margin-bottom: 10px;

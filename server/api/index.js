@@ -61,6 +61,7 @@ router.get('/year/:y/week/:w', (req, res) => {
             });
         }
         if (catalog && catalog.length > 0) {
+            catalog[0].results = sortByPostSize(catalog[0].results);
             res.json({
                 info: 'Found Catalog',
                 data: catalog
@@ -71,6 +72,10 @@ router.get('/year/:y/week/:w', (req, res) => {
         } 
     });
 });
+
+function sortByPostSize(catalog) {
+    return catalog.sort((a,b) => b.posts.length - a.posts.length);
+}
 
 router.get('/catalog', (req, res) => {
     const week = req.query.week ? req.query.week : null;
@@ -97,6 +102,7 @@ router.get('/catalog', (req, res) => {
             });
         }
         if (catalog) {
+            catalog[0].results = sortByPostSize(catalog[0].results);
             res.json({
                 info: 'Found Catalog',
                 data: catalog

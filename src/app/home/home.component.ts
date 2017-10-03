@@ -53,6 +53,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (res['data']) {
           this.processPostData(res['data'][0]);
         }
+      }, error => {
+        this.router.navigate(['/404']);
       });
     }
     // Get all history
@@ -67,6 +69,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subreddits = data.results.map(res => res.subreddit);
     this.posts = data.results[0].posts;
     this.catalog = data.results;
+    console.log(this.catalog);
   }
 
   processHistoryData(data) {

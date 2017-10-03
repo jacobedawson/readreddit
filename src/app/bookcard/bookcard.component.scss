@@ -3,7 +3,7 @@
 
 .card-block {
     flex-direction: row;
-    @media (md) {
+    @include breakpoint(md) {
         flex-direction: column;
     }
 }

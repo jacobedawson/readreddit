@@ -11,7 +11,4 @@ export class FooterComponent implements OnInit {
 
   ngOnInit() {}
 
-  onScrollTo($event) {
-  }
-
 }

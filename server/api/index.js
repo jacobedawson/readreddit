@@ -84,14 +84,14 @@ router.get('/catalog', (req, res) => {
     Catalog.find(query).sort({week: -1}).limit(1).populate({
         path: 'results',
         model: 'List',
-        options: {
-            sort: {
-                posts: 1
-            }
-        },
         populate: {
             path: 'posts',
-            model: 'Post'
+            model: 'Post',
+            options: {
+                sort: {
+                    published: -1
+                }
+            }
         }
     }).exec((err, catalog) => {
         if (err) {

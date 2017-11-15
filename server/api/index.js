@@ -8,6 +8,12 @@ const Catalog = require('../models/catalog');
 const History = require('../models/history');
 const Post = require('../models/post');
 const Mail = new MailChimp('d14170fd61cb4473a78d86ece46e91c6-us15');
+const amazon = require('amazon-product-api');
+const z = amazon.createClient({
+    awsId: 'AKIAIYCQD7MAVTQB3TZQ',
+    awsSecret: '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',
+    awsTag: 'readreddit-20'
+  });
 
 router.get('/', (req, res) => {
     res.status(200).json({
@@ -41,6 +47,27 @@ router.get('/list', (req, res) => {
             });
         }
     });
+});
+
+router.get('/description/:id', (req, res) => {
+    console.log('received request');
+    const bookID = req.params.id;
+    z.itemLookup({
+        idType: 'ASIN',
+        itemId: bookID,
+        responseGroup: 'EditorialReview'
+    }).then(results => {
+        if (results && results[0]) {
+            res.json({
+                info: 'Got book description',
+                data: results
+            });
+        } else {
+            res.json({
+                info: 'Nothing found'
+            });
+        }
+    })
 });
 
 router.get('/year/:y/week/:w', (req, res) => {

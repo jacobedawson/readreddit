@@ -12,6 +12,11 @@ const cron = require('node-cron');
 const week = require('current-week-number');
 const path = require('path');
 mongoose.Promise = global.Promise;
+/*
+  Goodreads
+  key: BJGWbjmh9Eb1vnde2MD8w
+  secret: tkfZE9qLPZu7MQSAb76ExZFgCzdbyrLTUoEqAWliA
+*/
 // mongoose.connect('mongodb://localhost/reddreader');
 // mongoose.connect('mongodb://localhost/reddreader-alt');
 mongoose.connect(
@@ -373,7 +378,6 @@ function linkCleaner(link) {
     return it, to be pushed into the post object's item array.
 */
 function amazonItemLookup(itemID) {
-  console.log(itemID);
   return z.itemLookup({
     idType: 'ASIN',
     itemId: `${itemID}`,
@@ -387,7 +391,8 @@ function amazonItemLookup(itemID) {
         author: resultsObject.ItemAttributes[0].Author,
         ISBN: resultsObject.ItemAttributes[0].ISBN,
         title: resultsObject.ItemAttributes[0].Title,
-        description: resultsObject.EditorialReviews[0].EditorialReview[0].Content
+        description: resultsObject.EditorialReviews[0].EditorialReview[0].Content,
+        ASIN: itemID
       };
     } else {
       return undefined;

@@ -7,7 +7,8 @@ const LinkSchema = new Schema({
     author: String,
     ISBN: String,
     title: String,
-    descript: String
+    description: String,
+    ASIN: String
 });
 
 // Create a compound index to prevent dupes

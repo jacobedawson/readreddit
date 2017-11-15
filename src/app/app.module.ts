@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 /* Services */
 import { NewsletterService } from './newsletter.service';
 import { PostService } from './post.service';
+import { BookService } from './services/book/book.service';
 
 /* Components */
 import { AppComponent } from './app.component';
@@ -52,7 +53,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [PostService, NewsletterService],
+  providers: [PostService, NewsletterService, BookService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

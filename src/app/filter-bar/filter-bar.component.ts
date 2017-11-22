@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PostService } from './../post.service';
+import { Observable } from 'rxjs/Observable';
+
 
 @Component({
   selector: 'app-filter-bar',
@@ -8,25 +10,24 @@ import { PostService } from './../post.service';
   styleUrls: ['./filter-bar.component.scss']
 })
 export class FilterBarComponent implements OnInit {
-  catalog: any = [];
-  selectedSubreddit = false;
   selectedDate = '';
   activeSub;
   @Input() dates;
   @Input() subreddits;
+  @Input() selectedSubreddit;
   @Output()
   subredditSelect = new EventEmitter<String>(); // creating an output event
   constructor(private postService: PostService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    const x = this.route.snapshot.params;
-    if (x.year && x.week) {
-      console.log(x);
-      this.selectedDate = x.week + x.year;
+    const dates = this.route.snapshot.params;
+    if (dates.year && dates.week) {
+      this.selectedDate = dates.week + dates.year;
     }
   }
 
   onSubredditSelection(e) {
+    console.log('changed', e);
     this.subredditSelect.emit(e.target.value);
   }
 

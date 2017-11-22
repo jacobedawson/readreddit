@@ -3,6 +3,7 @@
   <app-filter-bar 
   [subreddits]="subreddits" 
   [dates]="dates" 
+  [selectedSubreddit]="selectedSubreddit"
   (subredditSelect)="onSubredditSelect($event)"></app-filter-bar>
   <app-filtered-results [posts]="posts"></app-filtered-results>
 </div>

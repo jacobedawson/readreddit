@@ -27,7 +27,6 @@ export class FilterBarComponent implements OnInit {
   }
 
   onSubredditSelection(e) {
-    console.log('changed', e);
     this.subredditSelect.emit(e.target.value);
   }
 

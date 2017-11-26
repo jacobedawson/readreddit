@@ -66,7 +66,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   processPostData(data) {
-    console.log('processing post');
     this.subreddits = data.results.map(res => res.subreddit);
     this.posts = data.results[0].posts;
     this.selectedSubreddit = data.results[0].subreddit;
@@ -83,7 +82,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onSubredditSelect(sub) {
-    console.log('received subreddit select', sub);
     this.catalog.forEach(arr => {
       if (arr.subreddit === sub) {
         this.posts = arr.posts;

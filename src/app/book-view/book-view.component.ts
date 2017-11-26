@@ -11,7 +11,7 @@ import 'rxjs/add/operator/switchMap';
 })
 export class BookViewComponent implements OnInit {
 
-  private book;
+  public book;
 
   constructor(private route: ActivatedRoute, private bookService: BookService) { }
 

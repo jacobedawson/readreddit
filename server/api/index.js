@@ -56,7 +56,6 @@ router.get('/list', (req, res) => {
 });
 
 router.get('/description/:id', (req, res) => {
-  console.log('received request');
   const bookID = req.params.id;
   z.itemLookup({
     idType: 'ASIN',
@@ -78,7 +77,6 @@ router.get('/description/:id', (req, res) => {
 
 
 router.get('/book/:id', (req, res) => {
-    console.log('finding book');
     const { id } = req.params;
     Post.find({ 'links._id' : id }, (err, result) => {
         if (err) {

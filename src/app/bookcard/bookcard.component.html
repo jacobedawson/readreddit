@@ -2,9 +2,11 @@
     <div class="card-block d-flex align-items-center flex-wrap">
       <div class="post-thumbnail" [style.background-image]="'url(' + bookData.image + ')'"></div>
       <div class="book-information">
-        <h5 class="card-title">{{bookData.title}}</h5>
+        <h5 class="card-title">
+         <a [routerLink]="['/book', bookData.title, bookData._id]">{{bookData.title}}</a>
+        </h5>
         <p class="card-text author">{{bookData.author}}</p>
-        <a href="{{bookData.url}}" target="_blank" rel="noopener noreferrer" class="rr-button primary">View Book
+        <a href="{{bookData.url}}" target="_blank" rel="noopener noreferrer" class="rr-button primary">Buy from Amazon
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="arrow">
                 <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z">
                 </path>

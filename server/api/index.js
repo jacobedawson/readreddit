@@ -10,182 +10,223 @@ const Post = require('../models/post');
 const Mail = new MailChimp('d14170fd61cb4473a78d86ece46e91c6-us15');
 const amazon = require('amazon-product-api');
 const z = amazon.createClient({
-    awsId: 'AKIAIYCQD7MAVTQB3TZQ',
-    awsSecret: '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',
-    awsTag: 'readreddit-20'
-  });
+  awsId: 'AKIAIYCQD7MAVTQB3TZQ',
+  awsSecret: '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',
+  awsTag: 'readreddit-20'
+});
 
 router.get('/', (req, res) => {
-    res.status(200).json({
-        message: 'Connected to API!'
-    });
+  res.status(200).json({
+    message: 'Connected to API!'
+  });
 });
 
 // Get all current lists, or the list for a particular subreddit
 router.get('/list', (req, res) => {
-    const w = currentWeek();
-    const y = (new Date()).getFullYear();
-    const week = req.query.week ? req.query.week : 0;
-    const year = req.query.year ? req.query.year : 0;
-    const subreddit = req.query.subreddit ? req.query.subreddit : false;
-    const query = subreddit ? { week, year, subreddit } : {};
-    List.find(query).sort({subreddit: 1}).exec((err, list) => {
-        if (err) {
-            res.json({
-                info: 'Error while retrieving list',
-                error: err
-            });
-        }
-        if (list.length > 0) {
-            res.json({
-                info: 'Found ReddReader List',
-                data: list
-            });
-        } else {
-            res.json({
-                info: 'No list matching that search found'
-            });
-        }
-    });
+  const w = currentWeek();
+  const y = (new Date()).getFullYear();
+  const week = req.query.week ? req.query.week : 0;
+  const year = req.query.year ? req.query.year : 0;
+  const subreddit = req.query.subreddit ? req.query.subreddit : false;
+  const query = subreddit ? {
+    week,
+    year,
+    subreddit
+  } : {};
+  List.find(query).sort({
+    subreddit: 1
+  }).exec((err, list) => {
+    if (err) {
+      res.json({
+        info: 'Error while retrieving list',
+        error: err
+      });
+    }
+    if (list.length > 0) {
+      res.json({
+        info: 'Found ReddReader List',
+        data: list
+      });
+    } else {
+      res.json({
+        info: 'No list matching that search found'
+      });
+    }
+  });
 });
 
 router.get('/description/:id', (req, res) => {
-    console.log('received request');
-    const bookID = req.params.id;
-    z.itemLookup({
-        idType: 'ASIN',
-        itemId: bookID,
-        responseGroup: 'EditorialReview'
-    }).then(results => {
-        if (results && results[0]) {
+  console.log('received request');
+  const bookID = req.params.id;
+  z.itemLookup({
+    idType: 'ASIN',
+    itemId: bookID,
+    responseGroup: 'EditorialReview'
+  }).then(results => {
+    if (results && results[0]) {
+      res.json({
+        info: 'Got book description',
+        data: results
+      });
+    } else {
+      res.json({
+        info: 'Nothing found'
+      });
+    }
+  })
+});
+
+
+router.get('/book/:id', (req, res) => {
+    console.log('finding book');
+    const { id } = req.params;
+    Post.find({ 'links._id' : id }, (err, result) => {
+        if (err) {
             res.json({
-                info: 'Got book description',
-                data: results
-            });
-        } else {
-            res.json({
-                info: 'Nothing found'
+                info: 'No results found'
             });
         }
-    })
+        if (result) {
+            const bookDetails = result[0].links.filter(b => {
+                return b._id.toString() === id;
+            });
+            res.json({
+                data: bookDetails,
+                info: 'Found Book Details'
+            });
+        }
+    });
 });
 
 router.get('/year/:y/week/:w', (req, res) => {
-    const {y: year, w: week} = req.params;
-    Catalog.find({year, week}).populate({
-        path: 'results',
-        model: 'List',
-        populate: {
-            path: 'posts',
-            model: 'Post'
-        }
-    }).exec((err, catalog) => {
-        if (err) {
-            console.log(err);
-            res.json({
-                info: 'Error while retrieving catalog',
-                error: err
-            });
-        }
-        if (catalog && catalog.length > 0) {
-            catalog[0].results = sortByPostSize(catalog[0].results);
-            res.json({
-                info: 'Found Catalog',
-                data: catalog
-            });
-        } else {
-            console.log('not found');
-            res.status(404).send('Not Found');
-        } 
-    });
+  const {
+    y: year,
+    w: week
+  } = req.params;
+  Catalog.find({
+    year,
+    week
+  }).populate({
+    path: 'results',
+    model: 'List',
+    populate: {
+      path: 'posts',
+      model: 'Post'
+    }
+  }).exec((err, catalog) => {
+    if (err) {
+      console.log(err);
+      res.json({
+        info: 'Error while retrieving catalog',
+        error: err
+      });
+    }
+    if (catalog && catalog.length > 0) {
+      catalog[0].results = sortByPostSize(catalog[0].results);
+      res.json({
+        info: 'Found Catalog',
+        data: catalog
+      });
+    } else {
+      console.log('not found');
+      res.status(404).send('Not Found');
+    }
+  });
 });
 
 function sortByPostSize(catalog) {
-    return catalog.sort((a,b) => b.posts.length - a.posts.length);
+  return catalog.sort((a, b) => b.posts.length - a.posts.length);
 }
 
 router.get('/catalog', (req, res) => {
-    const week = req.query.week ? req.query.week : null;
-    const year = req.query.year ? req.query.year : null;
-    const query = week ? { week, year } : {};
-    Catalog.find(query).sort({week: -1}).limit(1).populate({
-        path: 'results',
-        model: 'List',
-        populate: {
-            path: 'posts',
-            model: 'Post',
-            options: {
-                sort: {
-                    published: -1
-                }
-            }
+  const week = req.query.week ? req.query.week : null;
+  const year = req.query.year ? req.query.year : null;
+  const query = week ? {
+    week,
+    year
+  } : {};
+  Catalog.find(query).sort({
+    week: -1
+  }).limit(1).populate({
+    path: 'results',
+    model: 'List',
+    populate: {
+      path: 'posts',
+      model: 'Post',
+      options: {
+        sort: {
+          published: -1
         }
-    }).exec((err, catalog) => {
-        if (err) {
-            console.log(err);
-            res.json({
-                info: 'Error while retrieving catalog',
-                error: err
-            });
-        }
-        if (catalog) {
-            catalog[0].results = sortByPostSize(catalog[0].results);
-            res.json({
-                info: 'Found Catalog',
-                data: catalog
-            });
-        } else {
-            res.json({
-                info: 'No catalog found'
-            });
-        }
-    });
+      }
+    }
+  }).exec((err, catalog) => {
+    if (err) {
+      console.log(err);
+      res.json({
+        info: 'Error while retrieving catalog',
+        error: err
+      });
+    }
+    if (catalog) {
+      catalog[0].results = sortByPostSize(catalog[0].results);
+      res.json({
+        info: 'Found Catalog',
+        data: catalog
+      });
+    } else {
+      res.json({
+        info: 'No catalog found'
+      });
+    }
+  });
 });
 
 router.get('/history', (req, res) => {
-    History.find({}).sort({week: -1}).exec((err, history) => {
-        if (err) {
-            console.log(err);
-            res.json({
-                info: "Error while retrieving history",
-                error: err
-            })
-        }
-        if (history) {
-            res.json({
-                info: "Found History",
-                data: history
-            });
-        } else {
-            res.json({
-                info: "No History found..."
-            });
-        }
-    });
+  History.find({}).sort({
+    week: -1
+  }).exec((err, history) => {
+    if (err) {
+      console.log(err);
+      res.json({
+        info: "Error while retrieving history",
+        error: err
+      })
+    }
+    if (history) {
+      res.json({
+        info: "Found History",
+        data: history
+      });
+    } else {
+      res.json({
+        info: "No History found..."
+      });
+    }
+  });
 });
 
 router.post('/newsletter', (req, res) => {
-    console.log('Received newsletter post request');
-    if (!EmailValidator.validate(req.body.email)) {
-        res.status(500).send({
-            error: 'That email is invalid..'
+  console.log('Received newsletter post request');
+  if (!EmailValidator.validate(req.body.email)) {
+    res.status(500).send({
+      error: 'That email is invalid..'
+    });
+  } else {
+    Mail.post('/lists/59a350c6df/members', {
+      email_address: req.body.email,
+      status: 'subscribed'
+    }).then((err, success) => {
+      res.status(200).send({
+        info: 'success'
+      })
+    }).catch(err => {
+      if (err) {
+        res.status(400).send({
+          error: err
         });
-    } else {
-        Mail.post('/lists/59a350c6df/members', {
-            email_address: req.body.email,
-            status: 'subscribed'
-        }).then((err, success) => {
-            res.status(200).send({
-                info: 'success'
-            })
-        }).catch(err => {
-            if (err) {
-                res.status(400).send({
-                    error: err
-                });
-            }
-        });
-    }
+      }
+    });
+  }
 });
 
 module.exports = router;

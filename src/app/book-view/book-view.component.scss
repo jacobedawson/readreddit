@@ -1,0 +1,24 @@
+@import '../sass/colors';
+
+.book-view__title {
+    color: $rr-red;
+}
+
+.book-view__description {
+
+}
+
+.book-view__image {
+    border-bottom: 1px solid $rr-pink;
+    padding-bottom: 2rem;
+    a.rr-button {
+        margin: 20px auto;
+    }
+    img {
+        transition: 0.3s border ease-in-out;
+        border: 1px solid transparent;
+        &:hover {
+            border: 1px solid $rr-pink;
+        }
+    }
+}

@@ -1,3 +1,4 @@
+import { BookViewComponent } from './book-view/book-view.component';
 import { NewsletterPageComponent } from './newsletter-page/newsletter-page.component';
 import { FaqComponent } from './faq/faq.component';
 import { AboutComponent } from './about/about.component';
@@ -15,6 +16,10 @@ const routes: Routes = [
   {
     path: 'year/:year/week/:week',
     component: HomeComponent
+  },
+  {
+    path: 'book/:title/:id',
+    component: BookViewComponent
   },
   {
     path: 'newsletter',

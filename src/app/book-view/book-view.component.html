@@ -1,0 +1,28 @@
+<div class="container content-container">
+  <div class="book-view">
+    <h4 class="book-view__title mt-5">{{book?.title}}</h4>
+    <p class="book-view__description author">Written by {{book?.author}}</p>
+    <div class="row">
+      <!-- image -->
+      <div class="col-12 text-center book-view__image mt-4">
+        <a href="{{book?.url}}">
+          <img src={{book?.image}} alt="">
+        </a>
+        <a href="{{book?.url}}" target="_blank" rel="noopener noreferrer" class="rr-button primary">Buy on Amazon
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="arrow">
+                  <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z">
+                  </path>
+                </svg>
+              </a>
+      </div>
+      <!-- description -->
+      <div class="col-12 mt-5" [innerHTML]=book?.description></div>
+    </div>
+    <a href="{{book?.url}}" target="_blank" rel="noopener noreferrer" class="rr-button primary mt-5 mb-5">Buy on Amazon
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="arrow">
+        <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z">
+        </path>
+      </svg>
+    </a>
+  </div>
+</div>

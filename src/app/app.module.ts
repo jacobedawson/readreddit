@@ -5,6 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 
+/* x */
+import { UrlSerializer } from '@angular/router';
+import { CustomUrlSerializer } from './CustomURL';
+
 /* Services */
 import { NewsletterService } from './newsletter.service';
 import { PostService } from './post.service';
@@ -27,6 +31,7 @@ import { NewsletterPageComponent } from './newsletter-page/newsletter-page.compo
 import { AboutComponent } from './about/about.component';
 import { FaqComponent } from './faq/faq.component';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { BookViewComponent } from './book-view/book-view.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +45,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
     IntrotextComponent,
     FilterBarComponent,
     BookcardComponent,
+    BookViewComponent,
     NewsletterModalComponent,
     NewsletterFormComponent,
     NewsletterPageComponent,
@@ -53,7 +59,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [PostService, NewsletterService, BookService],
+  providers: [PostService, NewsletterService, BookService, { provide: UrlSerializer, useClass: CustomUrlSerializer }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
